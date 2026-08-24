@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as MasterDataComplexProblemAttributesRouteImport } from './routes/master-data.complex-problem-attributes'
 import { Route as MasterDataKnowledgeProfilesRouteImport } from './routes/master-data.knowledge-profiles'
 import { Route as MasterDataProgramOutcomesRouteImport } from './routes/master-data.program-outcomes'
 import { Route as SettingsInstitutionRouteImport } from './routes/settings.institution'
@@ -25,6 +26,12 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MasterDataComplexProblemAttributesRoute =
+  MasterDataComplexProblemAttributesRouteImport.update({
+    id: '/master-data/complex-problem-attributes',
+    path: '/master-data/complex-problem-attributes',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const MasterDataKnowledgeProfilesRoute =
   MasterDataKnowledgeProfilesRouteImport.update({
     id: '/master-data/knowledge-profiles',
@@ -46,6 +53,7 @@ const SettingsInstitutionRoute = SettingsInstitutionRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
   '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
@@ -53,6 +61,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
   '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
@@ -61,6 +70,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
   '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
@@ -70,6 +80,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/master-data/complex-problem-attributes'
     | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
     | '/settings/institution'
@@ -77,6 +88,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/dashboard'
+    | '/master-data/complex-problem-attributes'
     | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
     | '/settings/institution'
@@ -84,6 +96,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/dashboard'
+    | '/master-data/complex-problem-attributes'
     | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
     | '/settings/institution'
@@ -92,6 +105,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
+  MasterDataComplexProblemAttributesRoute: typeof MasterDataComplexProblemAttributesRoute
   MasterDataKnowledgeProfilesRoute: typeof MasterDataKnowledgeProfilesRoute
   MasterDataProgramOutcomesRoute: typeof MasterDataProgramOutcomesRoute
   SettingsInstitutionRoute: typeof SettingsInstitutionRoute
@@ -111,6 +125,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/master-data/complex-problem-attributes': {
+      id: '/master-data/complex-problem-attributes'
+      path: '/master-data/complex-problem-attributes'
+      fullPath: '/master-data/complex-problem-attributes'
+      preLoaderRoute: typeof MasterDataComplexProblemAttributesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/master-data/knowledge-profiles': {
@@ -140,6 +161,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
+  MasterDataComplexProblemAttributesRoute:
+    MasterDataComplexProblemAttributesRoute,
   MasterDataKnowledgeProfilesRoute: MasterDataKnowledgeProfilesRoute,
   MasterDataProgramOutcomesRoute: MasterDataProgramOutcomesRoute,
   SettingsInstitutionRoute: SettingsInstitutionRoute,
