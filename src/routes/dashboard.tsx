@@ -149,7 +149,7 @@ function Dashboard() {
         </div>
 
         <Card className="shadow-[var(--shadow-card)]">
-          <CardHeader className="flex flex-wrap items-center justify-between gap-3">
+          <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3 space-y-0">
             <Button
               variant="outline"
               className="rounded-full"
@@ -199,7 +199,7 @@ function Dashboard() {
 
         <div className="grid gap-4 lg:grid-cols-3">
           <Card className="shadow-[var(--shadow-card)] lg:col-span-2">
-            <CardHeader className="flex items-center justify-between">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <CardTitle className="text-base">PO Attainment vs Target</CardTitle>
               <CardMenu />
             </CardHeader>
@@ -225,7 +225,7 @@ function Dashboard() {
           </Card>
 
           <Card className="shadow-[var(--shadow-card)]">
-            <CardHeader className="flex items-center justify-between">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <CardTitle className="text-base">Cognitive Level Distribution</CardTitle>
               <CardMenu />
             </CardHeader>
@@ -236,15 +236,16 @@ function Dashboard() {
                     data={cognitiveDistribution}
                     dataKey="value"
                     nameKey="name"
-                    innerRadius={58}
-                    outerRadius={92}
+                    cy="45%"
+                    innerRadius={54}
+                    outerRadius={86}
                     paddingAngle={2}
                   >
                     {cognitiveDistribution.map((entry, i) => (
                       <Cell key={entry.name} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                     ))}
                   </Pie>
-                  <Legend iconType="circle" wrapperStyle={{ fontSize: 11 }} />
+                  <Legend iconType="circle" verticalAlign="bottom" wrapperStyle={{ fontSize: 11 }} />
                   <Tooltip
                     contentStyle={{
                       background: "var(--popover)",
@@ -260,7 +261,7 @@ function Dashboard() {
         </div>
 
         <Card className="shadow-[var(--shadow-card)]">
-          <CardHeader className="flex items-center justify-between">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle className="text-base">Attainment Trend (Direct vs Indirect)</CardTitle>
             <CardMenu />
           </CardHeader>
