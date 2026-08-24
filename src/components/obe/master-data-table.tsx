@@ -46,6 +46,13 @@ import { PAGE_SIZE, canManageMasterData, type FieldDef, type ResourceDef } from 
 
 type Row = Record<string, unknown>;
 
+/**
+ * The generated Supabase types are per-table literals; this module is generic over
+ * the master-data tables, so queries go through a loosely typed accessor.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = (table: string) => (supabase as any).from(table) as any;
+
 function emptyForm(fields: FieldDef[], defaults?: Row): Row {
   const out: Row = {};
   for (const f of fields) {
@@ -105,10 +112,10 @@ export function MasterDataTable({
 }: {
   resource: ResourceDef;
   /** Extra equality filter, e.g. { department_id: "..." }. */
-  filter?: Record<string, string>;
+  filter?: Record<string, string> | undefined;
   /** Human labels for select values, keyed by field name then value. */
-  optionLabels?: Record<string, Record<string, string>>;
-  toolbar?: React.ReactNode;
+  optionLabels?: Record<string, Record<string, string>> | undefined;
+  toolbar?: React.ReactNode | undefined;
 }) {
   const { user } = useAuth();
   const canManage = canManageMasterData(user?.role);
@@ -128,7 +135,7 @@ export function MasterDataTable({
   const { data, isLoading, error } = useQuery({
     queryKey,
     queryFn: async () => {
-      let query = supabase.from(resource.table).select("*");
+      let query = db(resource.table).select("*");
       for (const [k, v] of Object.entries(filter ?? {})) query = query.eq(k, v);
       const { data, error } = await query;
       if (error) throw error;
@@ -172,13 +179,12 @@ export function MasterDataTable({
   const saveMutation = useMutation({
     mutationFn: async (payload: Row) => {
       if (editing) {
-        const { error } = await supabase
-          .from(resource.table)
+        const { error } = await db(resource.table)
           .update(payload)
           .eq("id", editing["id"] as string);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from(resource.table).insert({ ...payload, ...(filter ?? {}) });
+        const { error } = await db(resource.table).insert({ ...payload, ...(filter ?? {}) });
         if (error) throw error;
       }
     },
@@ -193,8 +199,7 @@ export function MasterDataTable({
 
   const toggleActiveMutation = useMutation({
     mutationFn: async (row: Row) => {
-      const { error } = await supabase
-        .from(resource.table)
+      const { error } = await db(resource.table)
         .update({ is_active: !row["is_active"] })
         .eq("id", row["id"] as string);
       if (error) throw error;
