@@ -1,9 +1,16 @@
 import {
   BarChart3,
+  Blocks,
   BookOpenCheck,
+  Boxes,
+  Brain,
+  Building2,
+  CalendarRange,
   ClipboardList,
   FileBarChart,
+  Gauge,
   GraduationCap,
+  Layers,
   LayoutDashboard,
   ListChecks,
   Network,
@@ -15,7 +22,16 @@ import type { Role } from "./mock-auth";
 export type NavItem = {
   label: string;
   icon: typeof LayoutDashboard;
-  to?: "/dashboard" | "/settings/institution";
+  to?:
+    | "/dashboard"
+    | "/settings/institution"
+    | "/master-data/program-outcomes"
+    | "/master-data/knowledge-profiles"
+    | "/master-data/complex-problem-attributes"
+    | "/master-data/bloom-taxonomy-levels"
+    | "/master-data/attainment-scale"
+    | "/master-data/semester-types"
+    | "/master-data/departments";
   comingSoon?: boolean;
   roles: Role[];
 };
@@ -24,6 +40,7 @@ export type NavSection = {
   title: string;
   items: NavItem[];
 };
+
 
 export const navSections: NavSection[] = [
   {

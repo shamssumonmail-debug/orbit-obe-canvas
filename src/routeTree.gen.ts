@@ -14,6 +14,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as MasterDataAttainmentScaleRouteImport } from './routes/master-data.attainment-scale'
 import { Route as MasterDataBloomTaxonomyLevelsRouteImport } from './routes/master-data.bloom-taxonomy-levels'
 import { Route as MasterDataComplexProblemAttributesRouteImport } from './routes/master-data.complex-problem-attributes'
+import { Route as MasterDataDepartmentsRouteImport } from './routes/master-data.departments'
 import { Route as MasterDataKnowledgeProfilesRouteImport } from './routes/master-data.knowledge-profiles'
 import { Route as MasterDataProgramOutcomesRouteImport } from './routes/master-data.program-outcomes'
 import { Route as MasterDataSemesterTypesRouteImport } from './routes/master-data.semester-types'
@@ -47,6 +48,11 @@ const MasterDataComplexProblemAttributesRoute =
     path: '/master-data/complex-problem-attributes',
     getParentRoute: () => rootRouteImport,
   } as any)
+const MasterDataDepartmentsRoute = MasterDataDepartmentsRouteImport.update({
+  id: '/master-data/departments',
+  path: '/master-data/departments',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MasterDataKnowledgeProfilesRoute =
   MasterDataKnowledgeProfilesRouteImport.update({
     id: '/master-data/knowledge-profiles',
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/master-data/attainment-scale': typeof MasterDataAttainmentScaleRoute
   '/master-data/bloom-taxonomy-levels': typeof MasterDataBloomTaxonomyLevelsRoute
   '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
+  '/master-data/departments': typeof MasterDataDepartmentsRoute
   '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/master-data/attainment-scale': typeof MasterDataAttainmentScaleRoute
   '/master-data/bloom-taxonomy-levels': typeof MasterDataBloomTaxonomyLevelsRoute
   '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
+  '/master-data/departments': typeof MasterDataDepartmentsRoute
   '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
@@ -99,6 +107,7 @@ export interface FileRoutesById {
   '/master-data/attainment-scale': typeof MasterDataAttainmentScaleRoute
   '/master-data/bloom-taxonomy-levels': typeof MasterDataBloomTaxonomyLevelsRoute
   '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
+  '/master-data/departments': typeof MasterDataDepartmentsRoute
   '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
     | '/master-data/attainment-scale'
     | '/master-data/bloom-taxonomy-levels'
     | '/master-data/complex-problem-attributes'
+    | '/master-data/departments'
     | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
     | '/master-data/semester-types'
@@ -123,6 +133,7 @@ export interface FileRouteTypes {
     | '/master-data/attainment-scale'
     | '/master-data/bloom-taxonomy-levels'
     | '/master-data/complex-problem-attributes'
+    | '/master-data/departments'
     | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
     | '/master-data/semester-types'
@@ -134,6 +145,7 @@ export interface FileRouteTypes {
     | '/master-data/attainment-scale'
     | '/master-data/bloom-taxonomy-levels'
     | '/master-data/complex-problem-attributes'
+    | '/master-data/departments'
     | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
     | '/master-data/semester-types'
@@ -146,6 +158,7 @@ export interface RootRouteChildren {
   MasterDataAttainmentScaleRoute: typeof MasterDataAttainmentScaleRoute
   MasterDataBloomTaxonomyLevelsRoute: typeof MasterDataBloomTaxonomyLevelsRoute
   MasterDataComplexProblemAttributesRoute: typeof MasterDataComplexProblemAttributesRoute
+  MasterDataDepartmentsRoute: typeof MasterDataDepartmentsRoute
   MasterDataKnowledgeProfilesRoute: typeof MasterDataKnowledgeProfilesRoute
   MasterDataProgramOutcomesRoute: typeof MasterDataProgramOutcomesRoute
   MasterDataSemesterTypesRoute: typeof MasterDataSemesterTypesRoute
@@ -189,6 +202,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MasterDataComplexProblemAttributesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/master-data/departments': {
+      id: '/master-data/departments'
+      path: '/master-data/departments'
+      fullPath: '/master-data/departments'
+      preLoaderRoute: typeof MasterDataDepartmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/master-data/knowledge-profiles': {
       id: '/master-data/knowledge-profiles'
       path: '/master-data/knowledge-profiles'
@@ -227,6 +247,7 @@ const rootRouteChildren: RootRouteChildren = {
   MasterDataBloomTaxonomyLevelsRoute: MasterDataBloomTaxonomyLevelsRoute,
   MasterDataComplexProblemAttributesRoute:
     MasterDataComplexProblemAttributesRoute,
+  MasterDataDepartmentsRoute: MasterDataDepartmentsRoute,
   MasterDataKnowledgeProfilesRoute: MasterDataKnowledgeProfilesRoute,
   MasterDataProgramOutcomesRoute: MasterDataProgramOutcomesRoute,
   MasterDataSemesterTypesRoute: MasterDataSemesterTypesRoute,
