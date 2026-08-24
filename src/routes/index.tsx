@@ -188,7 +188,7 @@ function LoginPage() {
               </button>
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={submitting}>
               Sign in
             </Button>
           </form>
