@@ -30,7 +30,6 @@ import {
   attainmentTrend,
   cognitiveDistribution,
   coSeries,
-  cognitiveDistribution as cognitive,
   obeCounters,
   pendingMapping,
   setupRings,
@@ -241,7 +240,7 @@ function Dashboard() {
                     outerRadius={92}
                     paddingAngle={2}
                   >
-                    {cognitive.map((entry, i) => (
+                    {cognitiveDistribution.map((entry, i) => (
                       <Cell key={entry.name} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                     ))}
                   </Pie>
