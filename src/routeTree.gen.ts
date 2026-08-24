@@ -16,6 +16,7 @@ import { Route as MasterDataBloomTaxonomyLevelsRouteImport } from './routes/mast
 import { Route as MasterDataComplexProblemAttributesRouteImport } from './routes/master-data.complex-problem-attributes'
 import { Route as MasterDataKnowledgeProfilesRouteImport } from './routes/master-data.knowledge-profiles'
 import { Route as MasterDataProgramOutcomesRouteImport } from './routes/master-data.program-outcomes'
+import { Route as MasterDataSemesterTypesRouteImport } from './routes/master-data.semester-types'
 import { Route as SettingsInstitutionRouteImport } from './routes/settings.institution'
 
 const IndexRoute = IndexRouteImport.update({
@@ -58,6 +59,11 @@ const MasterDataProgramOutcomesRoute =
     path: '/master-data/program-outcomes',
     getParentRoute: () => rootRouteImport,
   } as any)
+const MasterDataSemesterTypesRoute = MasterDataSemesterTypesRouteImport.update({
+  id: '/master-data/semester-types',
+  path: '/master-data/semester-types',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsInstitutionRoute = SettingsInstitutionRouteImport.update({
   id: '/settings/institution',
   path: '/settings/institution',
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
   '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
+  '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
 }
 export interface FileRoutesByTo {
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
   '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
+  '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
 }
 export interface FileRoutesById {
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
   '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
+  '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
 }
 export interface FileRouteTypes {
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/master-data/complex-problem-attributes'
     | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
+    | '/master-data/semester-types'
     | '/settings/institution'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/master-data/complex-problem-attributes'
     | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
+    | '/master-data/semester-types'
     | '/settings/institution'
   id:
     | '__root__'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
     | '/master-data/complex-problem-attributes'
     | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
+    | '/master-data/semester-types'
     | '/settings/institution'
   fileRoutesById: FileRoutesById
 }
@@ -136,6 +148,7 @@ export interface RootRouteChildren {
   MasterDataComplexProblemAttributesRoute: typeof MasterDataComplexProblemAttributesRoute
   MasterDataKnowledgeProfilesRoute: typeof MasterDataKnowledgeProfilesRoute
   MasterDataProgramOutcomesRoute: typeof MasterDataProgramOutcomesRoute
+  MasterDataSemesterTypesRoute: typeof MasterDataSemesterTypesRoute
   SettingsInstitutionRoute: typeof SettingsInstitutionRoute
 }
 
@@ -190,6 +203,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MasterDataProgramOutcomesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/master-data/semester-types': {
+      id: '/master-data/semester-types'
+      path: '/master-data/semester-types'
+      fullPath: '/master-data/semester-types'
+      preLoaderRoute: typeof MasterDataSemesterTypesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings/institution': {
       id: '/settings/institution'
       path: '/settings/institution'
@@ -209,6 +229,7 @@ const rootRouteChildren: RootRouteChildren = {
     MasterDataComplexProblemAttributesRoute,
   MasterDataKnowledgeProfilesRoute: MasterDataKnowledgeProfilesRoute,
   MasterDataProgramOutcomesRoute: MasterDataProgramOutcomesRoute,
+  MasterDataSemesterTypesRoute: MasterDataSemesterTypesRoute,
   SettingsInstitutionRoute: SettingsInstitutionRoute,
 }
 export const routeTree = rootRouteImport
