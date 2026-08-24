@@ -38,8 +38,8 @@ const STORAGE_KEY = "obe-demo-session";
 type AuthContextValue = {
   user: DemoUser | null;
   hydrated: boolean;
-  signIn: (email: string, password: string) => DemoUser | null;
-  signOut: () => void;
+  signIn: (email: string, password: string) => Promise<DemoUser | null>;
+  signOut: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -49,30 +49,59 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    let stored: DemoUser | null = null;
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setUser(JSON.parse(raw) as DemoUser);
+      if (raw) stored = JSON.parse(raw) as DemoUser;
     } catch {
       // ignore corrupt demo session
     }
-    setHydrated(true);
+    if (!stored) {
+      setHydrated(true);
+      return;
+    }
+    setUser(stored);
+    // Re-establish the backend session so database reads/writes are authorised.
+    const account = ACCOUNTS.find((a) => a.email === stored?.email);
+    supabase.auth
+      .getSession()
+      .then(async ({ data }) => {
+        if (data.session || !account) return;
+        await supabase.auth.signInWithPassword({ email: account.email, password: account.password });
+      })
+      .catch(() => undefined)
+      .finally(() => setHydrated(true));
   }, []);
 
-  const signIn = useCallback((email: string, password: string) => {
+  const signIn = useCallback(async (email: string, password: string) => {
     const match = ACCOUNTS.find(
       (a) => a.email.toLowerCase() === email.trim().toLowerCase() && a.password === password,
     );
     if (!match) return null;
+
+    // Demo accounts are provisioned on demand in the backend, then signed in for real
+    // so row-level security recognises the user and their role.
+    await ensureDemoAccount({
+      data: { email: match.email, password: match.password, role: match.role },
+    });
+    const { error } = await supabase.auth.signInWithPassword({
+      email: match.email,
+      password: match.password,
+    });
+    if (error) throw error;
+
     const { password: _pw, ...session } = match;
     setUser(session);
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
     return session;
   }, []);
 
-  const signOut = useCallback(() => {
+  const signOut = useCallback(async () => {
     setUser(null);
     window.localStorage.removeItem(STORAGE_KEY);
+    await supabase.auth.signOut();
   }, []);
+
 
   const value = useMemo(() => ({ user, hydrated, signIn, signOut }), [user, hydrated, signIn, signOut]);
 
