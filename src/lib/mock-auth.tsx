@@ -1,6 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
+import { supabase } from "@/integrations/supabase/client";
+import { ensureDemoAccount } from "@/lib/demo-auth.functions";
+
 export type Role = "super_admin" | "faculty";
+
 
 export type DemoUser = {
   name: string;
