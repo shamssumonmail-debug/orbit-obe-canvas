@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as MasterDataKnowledgeProfilesRouteImport } from './routes/master-data.knowledge-profiles'
 import { Route as MasterDataProgramOutcomesRouteImport } from './routes/master-data.program-outcomes'
 import { Route as SettingsInstitutionRouteImport } from './routes/settings.institution'
 
@@ -24,6 +25,12 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MasterDataKnowledgeProfilesRoute =
+  MasterDataKnowledgeProfilesRouteImport.update({
+    id: '/master-data/knowledge-profiles',
+    path: '/master-data/knowledge-profiles',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const MasterDataProgramOutcomesRoute =
   MasterDataProgramOutcomesRouteImport.update({
     id: '/master-data/program-outcomes',
@@ -39,12 +46,14 @@ const SettingsInstitutionRoute = SettingsInstitutionRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
 }
@@ -52,6 +61,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
 }
@@ -60,18 +70,21 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
     | '/settings/institution'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dashboard'
+    | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
     | '/settings/institution'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
+    | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
     | '/settings/institution'
   fileRoutesById: FileRoutesById
@@ -79,6 +92,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
+  MasterDataKnowledgeProfilesRoute: typeof MasterDataKnowledgeProfilesRoute
   MasterDataProgramOutcomesRoute: typeof MasterDataProgramOutcomesRoute
   SettingsInstitutionRoute: typeof SettingsInstitutionRoute
 }
@@ -97,6 +111,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/master-data/knowledge-profiles': {
+      id: '/master-data/knowledge-profiles'
+      path: '/master-data/knowledge-profiles'
+      fullPath: '/master-data/knowledge-profiles'
+      preLoaderRoute: typeof MasterDataKnowledgeProfilesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/master-data/program-outcomes': {
@@ -119,6 +140,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
+  MasterDataKnowledgeProfilesRoute: MasterDataKnowledgeProfilesRoute,
   MasterDataProgramOutcomesRoute: MasterDataProgramOutcomesRoute,
   SettingsInstitutionRoute: SettingsInstitutionRoute,
 }
