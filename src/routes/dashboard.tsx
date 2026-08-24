@@ -82,7 +82,7 @@ function RingCard({ label, value, total }: { label: string; value: number; total
   const pct = Math.min(100, Math.round((value / total) * 100));
   return (
     <Card className="gap-0 py-0 shadow-[var(--shadow-card)]">
-      <CardContent className="flex h-[190px] items-center justify-center p-2">
+      <CardContent className="relative flex h-[190px] items-center justify-center p-2">
         <ResponsiveContainer width="100%" height="100%">
           <RadialBarChart
             data={[{ name: label, value: pct }]}
