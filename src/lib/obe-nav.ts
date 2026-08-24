@@ -55,6 +55,54 @@ export const navSections: NavSection[] = [
     ],
   },
   {
+    title: "Master Data",
+    items: [
+      {
+        label: "Program Outcomes",
+        icon: Layers,
+        to: "/master-data/program-outcomes",
+        roles: ["super_admin", "faculty"],
+      },
+      {
+        label: "Knowledge Profiles",
+        icon: Blocks,
+        to: "/master-data/knowledge-profiles",
+        roles: ["super_admin", "faculty"],
+      },
+      {
+        label: "Problem / Activity Attributes",
+        icon: Boxes,
+        to: "/master-data/complex-problem-attributes",
+        roles: ["super_admin", "faculty"],
+      },
+      {
+        label: "Bloom's Taxonomy Levels",
+        icon: Brain,
+        to: "/master-data/bloom-taxonomy-levels",
+        roles: ["super_admin", "faculty"],
+      },
+      {
+        label: "Attainment Scale",
+        icon: Gauge,
+        to: "/master-data/attainment-scale",
+        roles: ["super_admin", "faculty"],
+      },
+      {
+        label: "Semester Types",
+        icon: CalendarRange,
+        to: "/master-data/semester-types",
+        roles: ["super_admin", "faculty"],
+      },
+      {
+        label: "Departments & Courses",
+        icon: Building2,
+        to: "/master-data/departments",
+        roles: ["super_admin", "faculty"],
+      },
+    ],
+  },
+
+  {
     title: "Outcome Setup",
     items: [
       { label: "Program Outcome (PO/PSO)", icon: GraduationCap, comingSoon: true, roles: ["super_admin"] },
