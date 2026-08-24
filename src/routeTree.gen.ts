@@ -11,6 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as MasterDataAttainmentScaleRouteImport } from './routes/master-data.attainment-scale'
+import { Route as MasterDataBloomTaxonomyLevelsRouteImport } from './routes/master-data.bloom-taxonomy-levels'
+import { Route as MasterDataComplexProblemAttributesRouteImport } from './routes/master-data.complex-problem-attributes'
+import { Route as MasterDataDepartmentsRouteImport } from './routes/master-data.departments'
+import { Route as MasterDataKnowledgeProfilesRouteImport } from './routes/master-data.knowledge-profiles'
+import { Route as MasterDataProgramOutcomesRouteImport } from './routes/master-data.program-outcomes'
+import { Route as MasterDataSemesterTypesRouteImport } from './routes/master-data.semester-types'
 import { Route as SettingsInstitutionRouteImport } from './routes/settings.institution'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +30,46 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MasterDataAttainmentScaleRoute =
+  MasterDataAttainmentScaleRouteImport.update({
+    id: '/master-data/attainment-scale',
+    path: '/master-data/attainment-scale',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MasterDataBloomTaxonomyLevelsRoute =
+  MasterDataBloomTaxonomyLevelsRouteImport.update({
+    id: '/master-data/bloom-taxonomy-levels',
+    path: '/master-data/bloom-taxonomy-levels',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MasterDataComplexProblemAttributesRoute =
+  MasterDataComplexProblemAttributesRouteImport.update({
+    id: '/master-data/complex-problem-attributes',
+    path: '/master-data/complex-problem-attributes',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MasterDataDepartmentsRoute = MasterDataDepartmentsRouteImport.update({
+  id: '/master-data/departments',
+  path: '/master-data/departments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MasterDataKnowledgeProfilesRoute =
+  MasterDataKnowledgeProfilesRouteImport.update({
+    id: '/master-data/knowledge-profiles',
+    path: '/master-data/knowledge-profiles',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MasterDataProgramOutcomesRoute =
+  MasterDataProgramOutcomesRouteImport.update({
+    id: '/master-data/program-outcomes',
+    path: '/master-data/program-outcomes',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MasterDataSemesterTypesRoute = MasterDataSemesterTypesRouteImport.update({
+  id: '/master-data/semester-types',
+  path: '/master-data/semester-types',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsInstitutionRoute = SettingsInstitutionRouteImport.update({
   id: '/settings/institution',
   path: '/settings/institution',
@@ -32,30 +79,89 @@ const SettingsInstitutionRoute = SettingsInstitutionRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/master-data/attainment-scale': typeof MasterDataAttainmentScaleRoute
+  '/master-data/bloom-taxonomy-levels': typeof MasterDataBloomTaxonomyLevelsRoute
+  '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
+  '/master-data/departments': typeof MasterDataDepartmentsRoute
+  '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
+  '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
+  '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/master-data/attainment-scale': typeof MasterDataAttainmentScaleRoute
+  '/master-data/bloom-taxonomy-levels': typeof MasterDataBloomTaxonomyLevelsRoute
+  '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
+  '/master-data/departments': typeof MasterDataDepartmentsRoute
+  '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
+  '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
+  '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/master-data/attainment-scale': typeof MasterDataAttainmentScaleRoute
+  '/master-data/bloom-taxonomy-levels': typeof MasterDataBloomTaxonomyLevelsRoute
+  '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
+  '/master-data/departments': typeof MasterDataDepartmentsRoute
+  '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
+  '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
+  '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/settings/institution'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/master-data/attainment-scale'
+    | '/master-data/bloom-taxonomy-levels'
+    | '/master-data/complex-problem-attributes'
+    | '/master-data/departments'
+    | '/master-data/knowledge-profiles'
+    | '/master-data/program-outcomes'
+    | '/master-data/semester-types'
+    | '/settings/institution'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/settings/institution'
-  id: '__root__' | '/' | '/dashboard' | '/settings/institution'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/master-data/attainment-scale'
+    | '/master-data/bloom-taxonomy-levels'
+    | '/master-data/complex-problem-attributes'
+    | '/master-data/departments'
+    | '/master-data/knowledge-profiles'
+    | '/master-data/program-outcomes'
+    | '/master-data/semester-types'
+    | '/settings/institution'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/master-data/attainment-scale'
+    | '/master-data/bloom-taxonomy-levels'
+    | '/master-data/complex-problem-attributes'
+    | '/master-data/departments'
+    | '/master-data/knowledge-profiles'
+    | '/master-data/program-outcomes'
+    | '/master-data/semester-types'
+    | '/settings/institution'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
+  MasterDataAttainmentScaleRoute: typeof MasterDataAttainmentScaleRoute
+  MasterDataBloomTaxonomyLevelsRoute: typeof MasterDataBloomTaxonomyLevelsRoute
+  MasterDataComplexProblemAttributesRoute: typeof MasterDataComplexProblemAttributesRoute
+  MasterDataDepartmentsRoute: typeof MasterDataDepartmentsRoute
+  MasterDataKnowledgeProfilesRoute: typeof MasterDataKnowledgeProfilesRoute
+  MasterDataProgramOutcomesRoute: typeof MasterDataProgramOutcomesRoute
+  MasterDataSemesterTypesRoute: typeof MasterDataSemesterTypesRoute
   SettingsInstitutionRoute: typeof SettingsInstitutionRoute
 }
 
@@ -75,6 +181,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/master-data/attainment-scale': {
+      id: '/master-data/attainment-scale'
+      path: '/master-data/attainment-scale'
+      fullPath: '/master-data/attainment-scale'
+      preLoaderRoute: typeof MasterDataAttainmentScaleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/master-data/bloom-taxonomy-levels': {
+      id: '/master-data/bloom-taxonomy-levels'
+      path: '/master-data/bloom-taxonomy-levels'
+      fullPath: '/master-data/bloom-taxonomy-levels'
+      preLoaderRoute: typeof MasterDataBloomTaxonomyLevelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/master-data/complex-problem-attributes': {
+      id: '/master-data/complex-problem-attributes'
+      path: '/master-data/complex-problem-attributes'
+      fullPath: '/master-data/complex-problem-attributes'
+      preLoaderRoute: typeof MasterDataComplexProblemAttributesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/master-data/departments': {
+      id: '/master-data/departments'
+      path: '/master-data/departments'
+      fullPath: '/master-data/departments'
+      preLoaderRoute: typeof MasterDataDepartmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/master-data/knowledge-profiles': {
+      id: '/master-data/knowledge-profiles'
+      path: '/master-data/knowledge-profiles'
+      fullPath: '/master-data/knowledge-profiles'
+      preLoaderRoute: typeof MasterDataKnowledgeProfilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/master-data/program-outcomes': {
+      id: '/master-data/program-outcomes'
+      path: '/master-data/program-outcomes'
+      fullPath: '/master-data/program-outcomes'
+      preLoaderRoute: typeof MasterDataProgramOutcomesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/master-data/semester-types': {
+      id: '/master-data/semester-types'
+      path: '/master-data/semester-types'
+      fullPath: '/master-data/semester-types'
+      preLoaderRoute: typeof MasterDataSemesterTypesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings/institution': {
       id: '/settings/institution'
       path: '/settings/institution'
@@ -88,6 +243,14 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
+  MasterDataAttainmentScaleRoute: MasterDataAttainmentScaleRoute,
+  MasterDataBloomTaxonomyLevelsRoute: MasterDataBloomTaxonomyLevelsRoute,
+  MasterDataComplexProblemAttributesRoute:
+    MasterDataComplexProblemAttributesRoute,
+  MasterDataDepartmentsRoute: MasterDataDepartmentsRoute,
+  MasterDataKnowledgeProfilesRoute: MasterDataKnowledgeProfilesRoute,
+  MasterDataProgramOutcomesRoute: MasterDataProgramOutcomesRoute,
+  MasterDataSemesterTypesRoute: MasterDataSemesterTypesRoute,
   SettingsInstitutionRoute: SettingsInstitutionRoute,
 }
 export const routeTree = rootRouteImport
