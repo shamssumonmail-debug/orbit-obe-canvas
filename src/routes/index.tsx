@@ -46,16 +46,26 @@ function LoginPage() {
     if (hydrated && user) navigate({ to: "/dashboard" });
   }, [hydrated, user, navigate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const session = signIn(email, password);
-    if (!session) {
-      toast.error("Invalid credentials — use demo accounts shown on this page");
-      return;
+    setSubmitting(true);
+    try {
+      const session = await signIn(email, password);
+      if (!session) {
+        toast.error("Invalid credentials — use demo accounts shown on this page");
+        return;
+      }
+      toast.success(`Welcome back, ${session.name}`);
+      navigate({ to: "/dashboard" });
+    } catch (err) {
+      toast.error((err as { message?: string })?.message ?? "Could not sign in");
+    } finally {
+      setSubmitting(false);
     }
-    toast.success(`Welcome back, ${session.name}`);
-    navigate({ to: "/dashboard" });
   };
+
 
   const prefill = (role: "super_admin" | "faculty") => {
     setTab(role);
@@ -178,8 +188,9 @@ function LoginPage() {
               </button>
             </div>
 
-            <Button type="submit" className="w-full">
-              Sign in
+            <Button type="submit" className="w-full" disabled={submitting}>
+              {submitting ? "Signing in…" : "Sign in"}
+
             </Button>
           </form>
 

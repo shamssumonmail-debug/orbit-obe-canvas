@@ -109,10 +109,11 @@ export function AppShell({
   const [desktopOpen, setDesktopOpen] = useState(true);
 
   const handleSignOut = () => {
-    signOut();
+    void signOut();
     toast.success("Signed out of the demo session");
     navigate({ to: "/" });
   };
+
 
   return (
     <div className="flex min-h-screen w-full bg-background">
