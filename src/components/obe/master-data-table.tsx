@@ -512,6 +512,36 @@ export function MasterDataTable({
                       ))}
                     </SelectContent>
                   </Select>
+                ) : f.type === "multiselect" ? (
+                  (() => {
+                    const opts = multiSelectOptions?.[f.name] ?? [];
+                    const selected = Array.isArray(values[f.name]) ? (values[f.name] as string[]) : [];
+                    return opts.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">No options available yet.</p>
+                    ) : (
+                      <div className="grid gap-2 rounded-lg border border-border p-3 sm:grid-cols-2">
+                        {opts.map((opt) => (
+                          <label key={opt.value} className="flex items-start gap-2 text-sm">
+                            <Checkbox
+                              checked={selected.includes(opt.value)}
+                              onCheckedChange={(checked) =>
+                                setValues((v) => {
+                                  const cur = Array.isArray(v[f.name]) ? (v[f.name] as string[]) : [];
+                                  return {
+                                    ...v,
+                                    [f.name]: checked
+                                      ? [...cur, opt.value]
+                                      : cur.filter((x) => x !== opt.value),
+                                  };
+                                })
+                              }
+                            />
+                            <span>{opt.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                    );
+                  })()
                 ) : f.type === "textarea" ? (
                   <Textarea
                     id={`field-${f.name}`}
