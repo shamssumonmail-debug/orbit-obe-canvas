@@ -201,16 +201,22 @@ export function MasterDataTable({
   const pageRows = rows.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const saveMutation = useMutation({
-    mutationFn: async (payload: Row) => {
+    mutationFn: async (formValues: Row) => {
+      const payload = toPayload(resource.fields, formValues);
+      let rowId: string;
       if (editing) {
-        const { error } = await db(resource.table)
-          .update(payload)
-          .eq("id", editing["id"] as string);
+        rowId = editing["id"] as string;
+        const { error } = await db(resource.table).update(payload).eq("id", rowId);
         if (error) throw error;
       } else {
-        const { error } = await db(resource.table).insert({ ...payload, ...(filter ?? {}) });
+        const { data: inserted, error } = await db(resource.table)
+          .insert({ ...payload, ...(filter ?? {}) })
+          .select("id")
+          .single();
         if (error) throw error;
+        rowId = inserted?.["id"] as string;
       }
+      if (onAfterSave && rowId) await onAfterSave(rowId, formValues);
     },
     onSuccess: () => {
       toast.success(`${resource.singular} ${editing ? "updated" : "created"}`);
