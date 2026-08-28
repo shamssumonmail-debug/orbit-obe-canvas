@@ -104,6 +104,7 @@ function validate(fields: FieldDef[], values: Row): Record<string, string> {
 function toPayload(fields: FieldDef[], values: Row): Row {
   const out: Row = {};
   for (const f of fields) {
+    if (f.virtual) continue;
     const raw = values[f.name];
     if (f.type === "number") out[f.name] = Number(raw);
     else if (f.type === "boolean") out[f.name] = Boolean(raw);
@@ -117,6 +118,11 @@ export function MasterDataTable({
   filter,
   optionLabels,
   toolbar,
+  multiSelectOptions,
+  virtualValues,
+  onAfterSave,
+  renderCellExtra,
+  detail,
 }: {
   resource: ResourceDef;
   /** Extra equality filter, e.g. { department_id: "..." }. */
@@ -124,6 +130,16 @@ export function MasterDataTable({
   /** Human labels for select values, keyed by field name then value. */
   optionLabels?: Record<string, Record<string, string>> | undefined;
   toolbar?: React.ReactNode | undefined;
+  /** Options for `multiselect` fields, keyed by field name. */
+  multiSelectOptions?: Record<string, { value: string; label: string }[]> | undefined;
+  /** Current values of virtual fields, keyed by row id then field name. */
+  virtualValues?: Record<string, Record<string, string[]>> | undefined;
+  /** Persist virtual fields after the row itself was saved. */
+  onAfterSave?: ((rowId: string, values: Row) => Promise<void>) | undefined;
+  /** Extra content rendered under a table cell, keyed by field name. */
+  renderCellExtra?: Record<string, (row: Row) => React.ReactNode> | undefined;
+  /** Adds a "view" icon in `attachTo`'s cell showing the long text of `field`. */
+  detail?: { attachTo: string; field: string } | undefined;
 }) {
   const { user } = useAuth();
   const canManage = canManageMasterData(user?.role);
