@@ -24,6 +24,7 @@ export type NavItem = {
   icon: typeof LayoutDashboard;
   to?:
     | "/dashboard"
+    | "/course-setup"
     | "/settings/institution"
     | "/master-data/program-outcomes"
     | "/master-data/knowledge-profiles"
