@@ -379,9 +379,25 @@ export function MasterDataTable({
                                 <Badge variant={value ? "default" : "outline"}>{value ? "Yes" : "No"}</Badge>
                               )
                             ) : (
-                              <span className={f.type === "textarea" ? "line-clamp-2 text-muted-foreground" : undefined}>
-                                {optionLabels?.[f.name]?.[String(value)] ?? (value === null || value === "" ? "—" : String(value))}
-                              </span>
+                              <div className="space-y-1">
+                                <div className="flex items-start gap-1">
+                                  <span className={f.type === "textarea" ? "line-clamp-2 text-muted-foreground" : undefined}>
+                                    {optionLabels?.[f.name]?.[String(value)] ?? (value === null || value === "" ? "—" : String(value))}
+                                  </span>
+                                  {detail?.attachTo === f.name && (
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="size-6 shrink-0 text-muted-foreground"
+                                      aria-label={`View full description of ${String(value)}`}
+                                      onClick={() => setDetailRow(row)}
+                                    >
+                                      <Eye className="size-3.5" />
+                                    </Button>
+                                  )}
+                                </div>
+                                {renderCellExtra?.[f.name]?.(row)}
+                              </div>
                             )}
                           </TableCell>
                         );
