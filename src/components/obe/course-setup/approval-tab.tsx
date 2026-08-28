@@ -60,29 +60,21 @@ export function ApprovalTab({ offering }: { offering: CourseOffering }) {
       if (action === "send-back" && !comment.trim()) {
         throw new Error("A review comment is required when sending an offering back to draft");
       }
-      const patch: Record<string, unknown> = { review_comment: comment.trim() || null };
-
-      if (action === "check") {
-        patch.status = "checked";
-        patch.checked_by = userId;
-        patch.checked_at = new Date().toISOString();
-      } else if (action === "approve") {
-        patch.status = "approved";
-        patch.approved_by = userId;
-        patch.approved_at = new Date().toISOString();
-      } else if (action === "send-back") {
-        patch.status = "draft";
-        patch.checked_by = null;
-        patch.checked_at = null;
-        patch.approved_by = null;
-        patch.approved_at = null;
-      } else {
-        patch.status = "draft";
-        patch.checked_by = null;
-        patch.checked_at = null;
-        patch.approved_by = null;
-        patch.approved_at = null;
-      }
+      const base = { review_comment: comment.trim() || null };
+      const now = new Date().toISOString();
+      const patch =
+        action === "check"
+          ? { ...base, status: "checked" as const, checked_by: userId, checked_at: now }
+          : action === "approve"
+            ? { ...base, status: "approved" as const, approved_by: userId, approved_at: now }
+            : {
+                ...base,
+                status: "draft" as const,
+                checked_by: null,
+                checked_at: null,
+                approved_by: null,
+                approved_at: null,
+              };
 
       const { error } = await supabase.from("course_offerings").update(patch).eq("id", offering.id);
       if (error) throw error;
