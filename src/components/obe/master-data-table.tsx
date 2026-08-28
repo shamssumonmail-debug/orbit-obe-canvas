@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowDown, ArrowUp, ArrowUpDown, Ban, Pencil, Plus, RotateCcw, Search } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Ban, Eye, Pencil, Plus, RotateCcw, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -20,6 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -57,11 +58,12 @@ function emptyForm(fields: FieldDef[], defaults?: Row): Row {
   const out: Row = {};
   for (const f of fields) {
     const preset = defaults?.[f.name];
-    if (preset !== undefined) {
+    if (preset !== undefined && preset !== null) {
       out[f.name] = preset;
       continue;
     }
-    out[f.name] = f.type === "boolean" ? true : f.type === "number" ? 0 : "";
+    out[f.name] =
+      f.type === "boolean" ? true : f.type === "number" ? 0 : f.type === "multiselect" ? [] : "";
   }
   return out;
 }
@@ -71,6 +73,12 @@ function validate(fields: FieldDef[], values: Row): Record<string, string> {
   for (const f of fields) {
     const raw = values[f.name];
     if (f.type === "boolean") continue;
+    if (f.type === "multiselect") {
+      if (f.required && (!Array.isArray(raw) || raw.length === 0)) {
+        errors[f.name] = `${f.label} is required`;
+      }
+      continue;
+    }
     const isEmpty = raw === "" || raw === null || raw === undefined;
     if (f.required && isEmpty) {
       errors[f.name] = `${f.label} is required`;
@@ -96,6 +104,7 @@ function validate(fields: FieldDef[], values: Row): Record<string, string> {
 function toPayload(fields: FieldDef[], values: Row): Row {
   const out: Row = {};
   for (const f of fields) {
+    if (f.virtual) continue;
     const raw = values[f.name];
     if (f.type === "number") out[f.name] = Number(raw);
     else if (f.type === "boolean") out[f.name] = Boolean(raw);
@@ -109,6 +118,11 @@ export function MasterDataTable({
   filter,
   optionLabels,
   toolbar,
+  multiSelectOptions,
+  virtualValues,
+  onAfterSave,
+  renderCellExtra,
+  detail,
 }: {
   resource: ResourceDef;
   /** Extra equality filter, e.g. { department_id: "..." }. */
@@ -116,6 +130,16 @@ export function MasterDataTable({
   /** Human labels for select values, keyed by field name then value. */
   optionLabels?: Record<string, Record<string, string>> | undefined;
   toolbar?: React.ReactNode | undefined;
+  /** Options for `multiselect` fields, keyed by field name. */
+  multiSelectOptions?: Record<string, { value: string; label: string }[]> | undefined;
+  /** Current values of virtual fields, keyed by row id then field name. */
+  virtualValues?: Record<string, Record<string, string[]>> | undefined;
+  /** Persist virtual fields after the row itself was saved. */
+  onAfterSave?: ((rowId: string, values: Row) => Promise<void>) | undefined;
+  /** Extra content rendered under a table cell, keyed by field name. */
+  renderCellExtra?: Record<string, (row: Row) => React.ReactNode> | undefined;
+  /** Adds a "view" icon in `attachTo`'s cell showing the long text of `field`. */
+  detail?: { attachTo: string; field: string } | undefined;
 }) {
   const { user } = useAuth();
   const canManage = canManageMasterData(user?.role);
@@ -128,6 +152,7 @@ export function MasterDataTable({
   const [editing, setEditing] = useState<Row | null>(null);
   const [values, setValues] = useState<Row>(() => emptyForm(resource.fields));
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [detailRow, setDetailRow] = useState<Row | null>(null);
 
   const filterKey = JSON.stringify(filter ?? {});
   const queryKey = ["master-data", resource.table, filterKey];
@@ -177,16 +202,22 @@ export function MasterDataTable({
   const pageRows = rows.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const saveMutation = useMutation({
-    mutationFn: async (payload: Row) => {
+    mutationFn: async (formValues: Row) => {
+      const payload = toPayload(resource.fields, formValues);
+      let rowId: string;
       if (editing) {
-        const { error } = await db(resource.table)
-          .update(payload)
-          .eq("id", editing["id"] as string);
+        rowId = editing["id"] as string;
+        const { error } = await db(resource.table).update(payload).eq("id", rowId);
         if (error) throw error;
       } else {
-        const { error } = await db(resource.table).insert({ ...payload, ...(filter ?? {}) });
+        const { data: inserted, error } = await db(resource.table)
+          .insert({ ...payload, ...(filter ?? {}) })
+          .select("id")
+          .single();
         if (error) throw error;
+        rowId = inserted?.["id"] as string;
       }
+      if (onAfterSave && rowId) await onAfterSave(rowId, formValues);
     },
     onSuccess: () => {
       toast.success(`${resource.singular} ${editing ? "updated" : "created"}`);
@@ -220,7 +251,8 @@ export function MasterDataTable({
 
   const openEdit = (row: Row) => {
     setEditing(row);
-    setValues(emptyForm(resource.fields, row));
+    const defaults: Row = { ...row, ...(virtualValues?.[String(row["id"])] ?? {}) };
+    setValues(emptyForm(resource.fields, defaults));
     setErrors({});
     setDialogOpen(true);
   };
@@ -229,7 +261,7 @@ export function MasterDataTable({
     const nextErrors = validate(resource.fields, values);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
-    saveMutation.mutate(toPayload(resource.fields, values));
+    saveMutation.mutate(values);
   };
 
   const toggleSort = (column: string) =>
@@ -347,9 +379,25 @@ export function MasterDataTable({
                                 <Badge variant={value ? "default" : "outline"}>{value ? "Yes" : "No"}</Badge>
                               )
                             ) : (
-                              <span className={f.type === "textarea" ? "line-clamp-2 text-muted-foreground" : undefined}>
-                                {optionLabels?.[f.name]?.[String(value)] ?? (value === null || value === "" ? "—" : String(value))}
-                              </span>
+                              <div className="space-y-1">
+                                <div className="flex items-start gap-1">
+                                  <span className={f.type === "textarea" ? "line-clamp-2 text-muted-foreground" : undefined}>
+                                    {optionLabels?.[f.name]?.[String(value)] ?? (value === null || value === "" ? "—" : String(value))}
+                                  </span>
+                                  {detail?.attachTo === f.name && (
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="size-6 shrink-0 text-muted-foreground"
+                                      aria-label={`View full description of ${String(value)}`}
+                                      onClick={() => setDetailRow(row)}
+                                    >
+                                      <Eye className="size-3.5" />
+                                    </Button>
+                                  )}
+                                </div>
+                                {renderCellExtra?.[f.name]?.(row)}
+                              </div>
                             )}
                           </TableCell>
                         );
@@ -464,6 +512,36 @@ export function MasterDataTable({
                       ))}
                     </SelectContent>
                   </Select>
+                ) : f.type === "multiselect" ? (
+                  (() => {
+                    const opts = multiSelectOptions?.[f.name] ?? [];
+                    const selected = Array.isArray(values[f.name]) ? (values[f.name] as string[]) : [];
+                    return opts.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">No options available yet.</p>
+                    ) : (
+                      <div className="grid gap-2 rounded-lg border border-border p-3 sm:grid-cols-2">
+                        {opts.map((opt) => (
+                          <label key={opt.value} className="flex items-start gap-2 text-sm">
+                            <Checkbox
+                              checked={selected.includes(opt.value)}
+                              onCheckedChange={(checked) =>
+                                setValues((v) => {
+                                  const cur = Array.isArray(v[f.name]) ? (v[f.name] as string[]) : [];
+                                  return {
+                                    ...v,
+                                    [f.name]: checked
+                                      ? [...cur, opt.value]
+                                      : cur.filter((x) => x !== opt.value),
+                                  };
+                                })
+                              }
+                            />
+                            <span>{opt.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                    );
+                  })()
                 ) : f.type === "textarea" ? (
                   <Textarea
                     id={`field-${f.name}`}
@@ -501,6 +579,21 @@ export function MasterDataTable({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {detail && (
+        <Dialog open={detailRow !== null} onOpenChange={(open) => !open && setDetailRow(null)}>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>{String(detailRow?.["code"] ?? resource.singular)}</DialogTitle>
+              <DialogDescription>{String(detailRow?.[detail.attachTo] ?? "")}</DialogDescription>
+            </DialogHeader>
+            <p className="whitespace-pre-wrap text-sm leading-relaxed">
+              {detailRow?.[detail.field] ? String(detailRow[detail.field]) : "No description recorded yet."}
+            </p>
+            {renderCellExtra?.[detail.attachTo]?.(detailRow ?? {})}
+          </DialogContent>
+        </Dialog>
+      )}
     </Card>
   );
 }

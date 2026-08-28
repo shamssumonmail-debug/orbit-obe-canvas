@@ -7,13 +7,15 @@ export function canManageMasterData(role: Role | undefined): boolean {
   return !!role && (MASTER_DATA_MANAGER_ROLES as readonly string[]).includes(role);
 }
 
-export type FieldType = "text" | "textarea" | "number" | "select" | "boolean";
+export type FieldType = "text" | "textarea" | "number" | "select" | "boolean" | "multiselect";
 
 export type FieldDef = {
   name: string;
   label: string;
   type: FieldType;
   required?: boolean;
+  /** Not a column on the resource table — handled outside the main insert/update payload. */
+  virtual?: boolean;
   /** Shown under the input as helper text (e.g. uniqueness hints). */
   hint?: string;
   options?: readonly string[];
@@ -77,6 +79,23 @@ export const programOutcomesResource: ResourceDef = {
       className: "w-32",
     },
     { name: "title", label: "Title", type: "text", required: true, inTable: true, sortable: true, searchable: true },
+    {
+      name: "description",
+      label: "Description",
+      type: "textarea",
+      required: true,
+      inTable: false,
+      searchable: true,
+      hint: "Full statement of the outcome — shown in the view dialog on the list.",
+    },
+    {
+      name: "knowledge_profiles",
+      label: "Knowledge Profiles",
+      type: "multiselect",
+      virtual: true,
+      inTable: false,
+      hint: "Select the K-profiles this outcome draws on.",
+    },
     displayOrderField,
     activeField,
   ],

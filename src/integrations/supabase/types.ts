@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.15"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -205,10 +205,47 @@ export type Database = {
         }
         Relationships: []
       }
+      po_knowledge_profile_mapping: {
+        Row: {
+          created_at: string
+          id: string
+          knowledge_profile_id: string
+          program_outcome_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          knowledge_profile_id: string
+          program_outcome_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          knowledge_profile_id?: string
+          program_outcome_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "po_knowledge_profile_mapping_knowledge_profile_id_fkey"
+            columns: ["knowledge_profile_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "po_knowledge_profile_mapping_program_outcome_id_fkey"
+            columns: ["program_outcome_id"]
+            isOneToOne: false
+            referencedRelation: "program_outcomes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       program_outcomes: {
         Row: {
           code: string
           created_at: string
+          description: string | null
           display_order: number
           id: string
           is_active: boolean
@@ -218,6 +255,7 @@ export type Database = {
         Insert: {
           code: string
           created_at?: string
+          description?: string | null
           display_order?: number
           id?: string
           is_active?: boolean
@@ -227,6 +265,7 @@ export type Database = {
         Update: {
           code?: string
           created_at?: string
+          description?: string | null
           display_order?: number
           id?: string
           is_active?: boolean
