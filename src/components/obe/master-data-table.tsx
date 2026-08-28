@@ -250,7 +250,8 @@ export function MasterDataTable({
 
   const openEdit = (row: Row) => {
     setEditing(row);
-    setValues(emptyForm(resource.fields, row));
+    const defaults: Row = { ...row, ...(virtualValues?.[String(row["id"])] ?? {}) };
+    setValues(emptyForm(resource.fields, defaults));
     setErrors({});
     setDialogOpen(true);
   };
@@ -259,7 +260,7 @@ export function MasterDataTable({
     const nextErrors = validate(resource.fields, values);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
-    saveMutation.mutate(toPayload(resource.fields, values));
+    saveMutation.mutate(values);
   };
 
   const toggleSort = (column: string) =>
