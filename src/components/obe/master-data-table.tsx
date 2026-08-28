@@ -58,11 +58,12 @@ function emptyForm(fields: FieldDef[], defaults?: Row): Row {
   const out: Row = {};
   for (const f of fields) {
     const preset = defaults?.[f.name];
-    if (preset !== undefined) {
+    if (preset !== undefined && preset !== null) {
       out[f.name] = preset;
       continue;
     }
-    out[f.name] = f.type === "boolean" ? true : f.type === "number" ? 0 : "";
+    out[f.name] =
+      f.type === "boolean" ? true : f.type === "number" ? 0 : f.type === "multiselect" ? [] : "";
   }
   return out;
 }
@@ -72,6 +73,12 @@ function validate(fields: FieldDef[], values: Row): Record<string, string> {
   for (const f of fields) {
     const raw = values[f.name];
     if (f.type === "boolean") continue;
+    if (f.type === "multiselect") {
+      if (f.required && (!Array.isArray(raw) || raw.length === 0)) {
+        errors[f.name] = `${f.label} is required`;
+      }
+      continue;
+    }
     const isEmpty = raw === "" || raw === null || raw === undefined;
     if (f.required && isEmpty) {
       errors[f.name] = `${f.label} is required`;
