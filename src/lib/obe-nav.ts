@@ -106,9 +106,14 @@ export const navSections: NavSection[] = [
   {
     title: "Outcome Setup",
     items: [
+      {
+        label: "Course Setup / CO-PO Mapping",
+        icon: Network,
+        to: "/course-setup",
+        roles: ["super_admin", "faculty"],
+      },
       { label: "Program Outcome (PO/PSO)", icon: GraduationCap, comingSoon: true, roles: ["super_admin"] },
       { label: "Course Outcome (CO)", icon: BookOpenCheck, comingSoon: true, roles: ["super_admin", "faculty"] },
-      { label: "CO-PO Mapping", icon: Network, comingSoon: true, roles: ["super_admin", "faculty"] },
     ],
   },
   {
