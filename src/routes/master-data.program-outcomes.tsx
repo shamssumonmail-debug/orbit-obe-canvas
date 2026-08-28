@@ -1,8 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 import { AppShell } from "@/components/obe/app-shell";
+import { Badge } from "@/components/ui/badge";
 import { RequireAuth } from "@/components/obe/require-auth";
 import { MasterDataTable } from "@/components/obe/master-data-table";
+import { supabase } from "@/integrations/supabase/client";
 import { programOutcomesResource } from "@/lib/master-data";
 
 export const Route = createFileRoute("/master-data/program-outcomes")({
