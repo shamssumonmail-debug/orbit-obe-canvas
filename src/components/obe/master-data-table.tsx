@@ -152,6 +152,7 @@ export function MasterDataTable({
   const [editing, setEditing] = useState<Row | null>(null);
   const [values, setValues] = useState<Row>(() => emptyForm(resource.fields));
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [detailRow, setDetailRow] = useState<Row | null>(null);
 
   const filterKey = JSON.stringify(filter ?? {});
   const queryKey = ["master-data", resource.table, filterKey];
