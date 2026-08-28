@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CourseSetupIndexRouteImport } from './routes/course-setup.index'
+import { Route as CourseSetupIdRouteImport } from './routes/course-setup.$id'
 import { Route as MasterDataAttainmentScaleRouteImport } from './routes/master-data.attainment-scale'
 import { Route as MasterDataBloomTaxonomyLevelsRouteImport } from './routes/master-data.bloom-taxonomy-levels'
 import { Route as MasterDataComplexProblemAttributesRouteImport } from './routes/master-data.complex-problem-attributes'
@@ -28,6 +30,16 @@ const IndexRoute = IndexRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CourseSetupIndexRoute = CourseSetupIndexRouteImport.update({
+  id: '/course-setup/',
+  path: '/course-setup/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CourseSetupIdRoute = CourseSetupIdRouteImport.update({
+  id: '/course-setup/$id',
+  path: '/course-setup/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MasterDataAttainmentScaleRoute =
@@ -79,6 +91,7 @@ const SettingsInstitutionRoute = SettingsInstitutionRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/course-setup/$id': typeof CourseSetupIdRoute
   '/master-data/attainment-scale': typeof MasterDataAttainmentScaleRoute
   '/master-data/bloom-taxonomy-levels': typeof MasterDataBloomTaxonomyLevelsRoute
   '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
@@ -87,10 +100,12 @@ export interface FileRoutesByFullPath {
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
+  '/course-setup/': typeof CourseSetupIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/course-setup/$id': typeof CourseSetupIdRoute
   '/master-data/attainment-scale': typeof MasterDataAttainmentScaleRoute
   '/master-data/bloom-taxonomy-levels': typeof MasterDataBloomTaxonomyLevelsRoute
   '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
@@ -99,11 +114,13 @@ export interface FileRoutesByTo {
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
+  '/course-setup': typeof CourseSetupIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/course-setup/$id': typeof CourseSetupIdRoute
   '/master-data/attainment-scale': typeof MasterDataAttainmentScaleRoute
   '/master-data/bloom-taxonomy-levels': typeof MasterDataBloomTaxonomyLevelsRoute
   '/master-data/complex-problem-attributes': typeof MasterDataComplexProblemAttributesRoute
@@ -112,12 +129,14 @@ export interface FileRoutesById {
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
+  '/course-setup/': typeof CourseSetupIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/course-setup/$id'
     | '/master-data/attainment-scale'
     | '/master-data/bloom-taxonomy-levels'
     | '/master-data/complex-problem-attributes'
@@ -126,10 +145,12 @@ export interface FileRouteTypes {
     | '/master-data/program-outcomes'
     | '/master-data/semester-types'
     | '/settings/institution'
+    | '/course-setup/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dashboard'
+    | '/course-setup/$id'
     | '/master-data/attainment-scale'
     | '/master-data/bloom-taxonomy-levels'
     | '/master-data/complex-problem-attributes'
@@ -138,10 +159,12 @@ export interface FileRouteTypes {
     | '/master-data/program-outcomes'
     | '/master-data/semester-types'
     | '/settings/institution'
+    | '/course-setup'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
+    | '/course-setup/$id'
     | '/master-data/attainment-scale'
     | '/master-data/bloom-taxonomy-levels'
     | '/master-data/complex-problem-attributes'
@@ -150,11 +173,13 @@ export interface FileRouteTypes {
     | '/master-data/program-outcomes'
     | '/master-data/semester-types'
     | '/settings/institution'
+    | '/course-setup/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
+  CourseSetupIdRoute: typeof CourseSetupIdRoute
   MasterDataAttainmentScaleRoute: typeof MasterDataAttainmentScaleRoute
   MasterDataBloomTaxonomyLevelsRoute: typeof MasterDataBloomTaxonomyLevelsRoute
   MasterDataComplexProblemAttributesRoute: typeof MasterDataComplexProblemAttributesRoute
@@ -163,6 +188,7 @@ export interface RootRouteChildren {
   MasterDataProgramOutcomesRoute: typeof MasterDataProgramOutcomesRoute
   MasterDataSemesterTypesRoute: typeof MasterDataSemesterTypesRoute
   SettingsInstitutionRoute: typeof SettingsInstitutionRoute
+  CourseSetupIndexRoute: typeof CourseSetupIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -179,6 +205,20 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/course-setup/': {
+      id: '/course-setup/'
+      path: '/course-setup'
+      fullPath: '/course-setup/'
+      preLoaderRoute: typeof CourseSetupIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/course-setup/$id': {
+      id: '/course-setup/$id'
+      path: '/course-setup/$id'
+      fullPath: '/course-setup/$id'
+      preLoaderRoute: typeof CourseSetupIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/master-data/attainment-scale': {
@@ -243,6 +283,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
+  CourseSetupIdRoute: CourseSetupIdRoute,
   MasterDataAttainmentScaleRoute: MasterDataAttainmentScaleRoute,
   MasterDataBloomTaxonomyLevelsRoute: MasterDataBloomTaxonomyLevelsRoute,
   MasterDataComplexProblemAttributesRoute:
@@ -252,6 +293,7 @@ const rootRouteChildren: RootRouteChildren = {
   MasterDataProgramOutcomesRoute: MasterDataProgramOutcomesRoute,
   MasterDataSemesterTypesRoute: MasterDataSemesterTypesRoute,
   SettingsInstitutionRoute: SettingsInstitutionRoute,
+  CourseSetupIndexRoute: CourseSetupIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
