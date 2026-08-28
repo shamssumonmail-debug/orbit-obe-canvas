@@ -7,13 +7,15 @@ export function canManageMasterData(role: Role | undefined): boolean {
   return !!role && (MASTER_DATA_MANAGER_ROLES as readonly string[]).includes(role);
 }
 
-export type FieldType = "text" | "textarea" | "number" | "select" | "boolean";
+export type FieldType = "text" | "textarea" | "number" | "select" | "boolean" | "multiselect";
 
 export type FieldDef = {
   name: string;
   label: string;
   type: FieldType;
   required?: boolean;
+  /** Not a column on the resource table — handled outside the main insert/update payload. */
+  virtual?: boolean;
   /** Shown under the input as helper text (e.g. uniqueness hints). */
   hint?: string;
   options?: readonly string[];
