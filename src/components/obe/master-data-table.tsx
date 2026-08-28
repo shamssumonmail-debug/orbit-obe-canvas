@@ -584,10 +584,8 @@ export function MasterDataTable({
         <Dialog open={detailRow !== null} onOpenChange={(open) => !open && setDetailRow(null)}>
           <DialogContent className="sm:max-w-lg">
             <DialogHeader>
-              <DialogTitle>{String(detailRow?.[detail.attachTo] ?? resource.singular)}</DialogTitle>
-              <DialogDescription>
-                {String(detailRow?.["title"] ?? "")}
-              </DialogDescription>
+              <DialogTitle>{String(detailRow?.["code"] ?? resource.singular)}</DialogTitle>
+              <DialogDescription>{String(detailRow?.[detail.attachTo] ?? "")}</DialogDescription>
             </DialogHeader>
             <p className="whitespace-pre-wrap text-sm leading-relaxed">
               {detailRow?.[detail.field] ? String(detailRow[detail.field]) : "No description recorded yet."}
