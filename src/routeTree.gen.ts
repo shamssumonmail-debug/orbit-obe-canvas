@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CourseSetupIndexRouteImport } from './routes/course-setup.index'
 import { Route as MasterDataAttainmentScaleRouteImport } from './routes/master-data.attainment-scale'
 import { Route as MasterDataBloomTaxonomyLevelsRouteImport } from './routes/master-data.bloom-taxonomy-levels'
 import { Route as MasterDataComplexProblemAttributesRouteImport } from './routes/master-data.complex-problem-attributes'
@@ -28,6 +29,11 @@ const IndexRoute = IndexRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CourseSetupIndexRoute = CourseSetupIndexRouteImport.update({
+  id: '/course-setup/',
+  path: '/course-setup/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MasterDataAttainmentScaleRoute =
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
+  '/course-setup/': typeof CourseSetupIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
+  '/course-setup': typeof CourseSetupIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/institution': typeof SettingsInstitutionRoute
+  '/course-setup/': typeof CourseSetupIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/master-data/program-outcomes'
     | '/master-data/semester-types'
     | '/settings/institution'
+    | '/course-setup/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/master-data/program-outcomes'
     | '/master-data/semester-types'
     | '/settings/institution'
+    | '/course-setup'
   id:
     | '__root__'
     | '/'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/master-data/program-outcomes'
     | '/master-data/semester-types'
     | '/settings/institution'
+    | '/course-setup/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -163,6 +175,7 @@ export interface RootRouteChildren {
   MasterDataProgramOutcomesRoute: typeof MasterDataProgramOutcomesRoute
   MasterDataSemesterTypesRoute: typeof MasterDataSemesterTypesRoute
   SettingsInstitutionRoute: typeof SettingsInstitutionRoute
+  CourseSetupIndexRoute: typeof CourseSetupIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -179,6 +192,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/course-setup/': {
+      id: '/course-setup/'
+      path: '/course-setup'
+      fullPath: '/course-setup/'
+      preLoaderRoute: typeof CourseSetupIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/master-data/attainment-scale': {
@@ -252,6 +272,7 @@ const rootRouteChildren: RootRouteChildren = {
   MasterDataProgramOutcomesRoute: MasterDataProgramOutcomesRoute,
   MasterDataSemesterTypesRoute: MasterDataSemesterTypesRoute,
   SettingsInstitutionRoute: SettingsInstitutionRoute,
+  CourseSetupIndexRoute: CourseSetupIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
