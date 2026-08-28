@@ -74,6 +74,155 @@ export type Database = {
         }
         Relationships: []
       }
+      co_assessment_tools: {
+        Row: {
+          course_outcome_id: string
+          created_at: string
+          display_order: number
+          id: string
+          max_marks: number
+          rubric_notes: string | null
+          tool_name: string
+          updated_at: string
+        }
+        Insert: {
+          course_outcome_id: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          max_marks: number
+          rubric_notes?: string | null
+          tool_name: string
+          updated_at?: string
+        }
+        Update: {
+          course_outcome_id?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          max_marks?: number
+          rubric_notes?: string | null
+          tool_name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_assessment_tools_course_outcome_id_fkey"
+            columns: ["course_outcome_id"]
+            isOneToOne: false
+            referencedRelation: "course_outcomes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_knowledge_profile_mapping: {
+        Row: {
+          course_outcome_id: string
+          created_at: string
+          id: string
+          knowledge_profile_id: string
+        }
+        Insert: {
+          course_outcome_id: string
+          created_at?: string
+          id?: string
+          knowledge_profile_id: string
+        }
+        Update: {
+          course_outcome_id?: string
+          created_at?: string
+          id?: string
+          knowledge_profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_knowledge_profile_mapping_course_outcome_id_fkey"
+            columns: ["course_outcome_id"]
+            isOneToOne: false
+            referencedRelation: "course_outcomes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_knowledge_profile_mapping_knowledge_profile_id_fkey"
+            columns: ["knowledge_profile_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_po_mapping: {
+        Row: {
+          course_outcome_id: string
+          created_at: string
+          id: string
+          program_outcome_id: string
+        }
+        Insert: {
+          course_outcome_id: string
+          created_at?: string
+          id?: string
+          program_outcome_id: string
+        }
+        Update: {
+          course_outcome_id?: string
+          created_at?: string
+          id?: string
+          program_outcome_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_po_mapping_course_outcome_id_fkey"
+            columns: ["course_outcome_id"]
+            isOneToOne: false
+            referencedRelation: "course_outcomes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_po_mapping_program_outcome_id_fkey"
+            columns: ["program_outcome_id"]
+            isOneToOne: false
+            referencedRelation: "program_outcomes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_problem_attribute_mapping: {
+        Row: {
+          complex_problem_attribute_id: string
+          course_outcome_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          complex_problem_attribute_id: string
+          course_outcome_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          complex_problem_attribute_id?: string
+          course_outcome_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_problem_attribute_mapping_complex_problem_attribute_id_fkey"
+            columns: ["complex_problem_attribute_id"]
+            isOneToOne: false
+            referencedRelation: "complex_problem_attributes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_problem_attribute_mapping_course_outcome_id_fkey"
+            columns: ["course_outcome_id"]
+            isOneToOne: false
+            referencedRelation: "course_outcomes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       complex_problem_attributes: {
         Row: {
           category: string
@@ -109,6 +258,220 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      course_offerings: {
+        Row: {
+          academic_year: number
+          approved_at: string | null
+          approved_by: string | null
+          checked_at: string | null
+          checked_by: string | null
+          co_attainment_target_percent: number
+          consultation_hours: string | null
+          course_type: string
+          created_at: string
+          created_by: string
+          credit_hours: number
+          curriculum_course_id: string
+          grading_weight_class_performance: number
+          grading_weight_final: number
+          grading_weight_quiz_assignment: number
+          id: string
+          instructor_id: string
+          review_comment: string | null
+          section: string
+          semester_type_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          academic_year: number
+          approved_at?: string | null
+          approved_by?: string | null
+          checked_at?: string | null
+          checked_by?: string | null
+          co_attainment_target_percent?: number
+          consultation_hours?: string | null
+          course_type: string
+          created_at?: string
+          created_by: string
+          credit_hours: number
+          curriculum_course_id: string
+          grading_weight_class_performance?: number
+          grading_weight_final?: number
+          grading_weight_quiz_assignment?: number
+          id?: string
+          instructor_id: string
+          review_comment?: string | null
+          section: string
+          semester_type_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          academic_year?: number
+          approved_at?: string | null
+          approved_by?: string | null
+          checked_at?: string | null
+          checked_by?: string | null
+          co_attainment_target_percent?: number
+          consultation_hours?: string | null
+          course_type?: string
+          created_at?: string
+          created_by?: string
+          credit_hours?: number
+          curriculum_course_id?: string
+          grading_weight_class_performance?: number
+          grading_weight_final?: number
+          grading_weight_quiz_assignment?: number
+          id?: string
+          instructor_id?: string
+          review_comment?: string | null
+          section?: string
+          semester_type_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_offerings_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_offerings_checked_by_fkey"
+            columns: ["checked_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_offerings_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_offerings_curriculum_course_id_fkey"
+            columns: ["curriculum_course_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_offerings_instructor_id_fkey"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_offerings_semester_type_id_fkey"
+            columns: ["semester_type_id"]
+            isOneToOne: false
+            referencedRelation: "semester_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_outcomes: {
+        Row: {
+          bloom_taxonomy_level_id: string
+          co_number: string
+          co_statement: string
+          course_offering_id: string
+          created_at: string
+          display_order: number
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          bloom_taxonomy_level_id: string
+          co_number: string
+          co_statement: string
+          course_offering_id: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          bloom_taxonomy_level_id?: string
+          co_number?: string
+          co_statement?: string
+          course_offering_id?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_outcomes_bloom_taxonomy_level_id_fkey"
+            columns: ["bloom_taxonomy_level_id"]
+            isOneToOne: false
+            referencedRelation: "bloom_taxonomy_levels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_outcomes_course_offering_id_fkey"
+            columns: ["course_offering_id"]
+            isOneToOne: false
+            referencedRelation: "course_offerings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_weekly_schedule: {
+        Row: {
+          course_offering_id: string
+          course_outcome_id: string | null
+          created_at: string
+          delivery_method: string | null
+          id: string
+          topic: string
+          updated_at: string
+          week_number: number
+        }
+        Insert: {
+          course_offering_id: string
+          course_outcome_id?: string | null
+          created_at?: string
+          delivery_method?: string | null
+          id?: string
+          topic: string
+          updated_at?: string
+          week_number: number
+        }
+        Update: {
+          course_offering_id?: string
+          course_outcome_id?: string | null
+          created_at?: string
+          delivery_method?: string | null
+          id?: string
+          topic?: string
+          updated_at?: string
+          week_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_weekly_schedule_course_offering_id_fkey"
+            columns: ["course_offering_id"]
+            isOneToOne: false
+            referencedRelation: "course_offerings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_weekly_schedule_course_outcome_id_fkey"
+            columns: ["course_outcome_id"]
+            isOneToOne: false
+            referencedRelation: "course_outcomes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       curriculum_courses: {
         Row: {
@@ -241,6 +604,30 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       program_outcomes: {
         Row: {
           code: string
@@ -324,6 +711,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_author_course_setup: { Args: never; Returns: boolean }
+      can_edit_course_offering: {
+        Args: { _offering_id: string }
+        Returns: boolean
+      }
+      can_edit_course_outcome: {
+        Args: { _course_outcome_id: string }
+        Returns: boolean
+      }
       can_manage_master_data: { Args: never; Returns: boolean }
       has_role: {
         Args: {
