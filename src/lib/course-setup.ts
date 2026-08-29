@@ -124,9 +124,20 @@ export type WeeklyScheduleRow = {
   topic: string;
   course_outcome_id: string | null;
   delivery_method: string | null;
+  assessment_strategy: string | null;
 };
 
-export type Profile = { id: string; full_name: string | null; email: string | null };
+export type Profile = {
+  id: string;
+  full_name: string | null;
+  email: string | null;
+  phone?: string | null;
+  designation?: string | null;
+  room_no?: string | null;
+  department_id?: string | null;
+  is_active?: boolean | null;
+};
+
 
 /** Editing is blocked once approved (for everyone) and once out of draft for non-managers. */
 export function canEditOffering(
