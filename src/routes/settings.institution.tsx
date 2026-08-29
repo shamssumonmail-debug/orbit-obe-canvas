@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { ImageUp, Loader2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/obe/app-shell";
@@ -9,10 +10,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { institutionProfile, type InstitutionProfile } from "@/lib/obe-mock-data";
+import {
+  uploadLogo,
+  useInstitution,
+  useLogoUrl,
+  useSaveInstitution,
+  type InstitutionProfileRow,
+} from "@/lib/institution";
 
 export const Route = createFileRoute("/settings/institution")({
   head: () => ({
@@ -21,13 +29,15 @@ export const Route = createFileRoute("/settings/institution")({
       {
         name: "description",
         content:
-          "Manage institution identity, accreditation details, academic session and attainment calculation preferences.",
+          "Manage institution identity, logo, sponsorship line, accreditation details, academic session and attainment calculation preferences.",
       },
       { property: "og:title", content: "Institution Profile · OBE Suite settings" },
       {
         property: "og:description",
-        content: "Institution identity, accreditation, academic session and attainment configuration.",
+        content: "Institution identity, logo, accreditation, academic session and attainment configuration.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: SettingsRoute,
@@ -42,31 +52,122 @@ function SettingsRoute() {
 }
 
 function InstitutionSettings() {
-  const [form, setForm] = useState<InstitutionProfile>(institutionProfile);
-  const [saved, setSaved] = useState<InstitutionProfile>(institutionProfile);
-  const dirty = JSON.stringify(form) !== JSON.stringify(saved);
+  const { data, isLoading, error } = useInstitution();
+  const saveMutation = useSaveInstitution();
+  const [form, setForm] = useState<InstitutionProfileRow | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  const logoUrl = useLogoUrl(form?.logo_url);
 
-  const set = <K extends keyof InstitutionProfile>(key: K, value: InstitutionProfile[K]) =>
-    setForm((f) => ({ ...f, [key]: value }));
+  useEffect(() => {
+    if (data) setForm(data);
+  }, [data]);
 
-  const handleSave = (e: React.FormEvent) => {
+  const set = <K extends keyof InstitutionProfileRow>(key: K, value: InstitutionProfileRow[K]) =>
+    setForm((f) => (f ? { ...f, [key]: value } : f));
+
+  const dirty = !!form && !!data && JSON.stringify(form) !== JSON.stringify(data);
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaved(form);
-    toast.success("Institution profile saved (local mock state)");
+    if (!form) return;
+    try {
+      await saveMutation.mutateAsync(form);
+      toast.success("Institution profile saved");
+    } catch (err) {
+      toast.error((err as Error).message);
+    }
   };
+
+  const handleLogo = async (file: File | undefined) => {
+    if (!file || !form) return;
+    setUploading(true);
+    try {
+      const path = await uploadLogo(file);
+      await saveMutation.mutateAsync({ id: form.id, logo_url: path });
+      setForm({ ...form, logo_url: path });
+      toast.success("Logo uploaded");
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <AppShell title="Institution Profile" subtitle="Settings › Institution Profile">
+        <Skeleton className="h-64 w-full" />
+      </AppShell>
+    );
+  }
+
+  if (error || !form) {
+    return (
+      <AppShell title="Institution Profile" subtitle="Settings › Institution Profile">
+        <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-6 text-sm text-destructive">
+          Could not load the institution profile{error ? `: ${(error as Error).message}` : "."}
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell title="Institution Profile" subtitle="Settings › Institution Profile">
       <form onSubmit={handleSave} className="space-y-5 pb-4">
         <Card className="shadow-[var(--shadow-card)]">
           <CardHeader>
-            <CardTitle className="text-base">Identity</CardTitle>
-            <CardDescription>Core details printed on outcome and accreditation reports.</CardDescription>
+            <CardTitle className="text-base">Identity &amp; branding</CardTitle>
+            <CardDescription>Printed on the header of every Course Details Form and report.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-3 md:col-span-2">
+              <Label>University logo</Label>
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="grid size-20 place-items-center overflow-hidden rounded-lg border border-border bg-muted">
+                  {logoUrl ? (
+                    <img src={logoUrl} alt={`${form.name} logo`} className="size-full object-contain" />
+                  ) : (
+                    <ImageUp className="size-6 text-muted-foreground" />
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/svg+xml,image/webp"
+                    className="hidden"
+                    onChange={(e) => void handleLogo(e.target.files?.[0])}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={uploading}
+                    onClick={() => fileRef.current?.click()}
+                  >
+                    {uploading ? (
+                      <Loader2 className="mr-2 size-4 animate-spin" />
+                    ) : (
+                      <ImageUp className="mr-2 size-4" />
+                    )}
+                    {uploading ? "Uploading…" : logoUrl ? "Replace logo" : "Upload logo"}
+                  </Button>
+                  <p className="text-xs text-muted-foreground">PNG, JPG, SVG or WebP up to 5 MB.</p>
+                </div>
+              </div>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="name">Institution name</Label>
               <Input id="name" value={form.name} onChange={(e) => set("name", e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="short_name">Short name</Label>
+              <Input
+                id="short_name"
+                value={form.short_name}
+                onChange={(e) => set("short_name", e.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="code">Institution code</Label>
@@ -76,11 +177,20 @@ function InstitutionSettings() {
               <Label htmlFor="affiliation">Affiliated to</Label>
               <Input
                 id="affiliation"
-                value={form.affiliatedTo}
-                onChange={(e) => set("affiliatedTo", e.target.value)}
+                value={form.affiliated_to}
+                onChange={(e) => set("affiliated_to", e.target.value)}
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="sponsor_line">Sponsorship / approval line</Label>
+              <Textarea
+                id="sponsor_line"
+                rows={2}
+                value={form.sponsor_line}
+                onChange={(e) => set("sponsor_line", e.target.value)}
+              />
+            </div>
+            <div className="space-y-2 md:col-span-2">
               <Label htmlFor="accreditation">Accreditation</Label>
               <Input
                 id="accreditation"
@@ -99,12 +209,12 @@ function InstitutionSettings() {
           <CardContent className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label>Academic year</Label>
-              <Select value={form.academicYear} onValueChange={(v) => set("academicYear", v)}>
+              <Select value={form.academic_year} onValueChange={(v) => set("academic_year", v)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {["2022-23", "2023-24", "2024-25", "2025-26"].map((y) => (
+                  {["2022-23", "2023-24", "2024-25", "2025-26", "2026-27"].map((y) => (
                     <SelectItem key={y} value={y}>
                       {y}
                     </SelectItem>
@@ -119,7 +229,7 @@ function InstitutionSettings() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {["Term 1", "Term 2"].map((t) => (
+                  {["Spring", "Fall"].map((t) => (
                     <SelectItem key={t} value={t}>
                       {t}
                     </SelectItem>
@@ -132,7 +242,7 @@ function InstitutionSettings() {
 
         <Card className="shadow-[var(--shadow-card)]">
           <CardHeader>
-            <CardTitle className="text-base">Contact & address</CardTitle>
+            <CardTitle className="text-base">Contact &amp; address</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
@@ -149,18 +259,22 @@ function InstitutionSettings() {
             </div>
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="address">Address</Label>
-              <Input id="address" value={form.addressLine} onChange={(e) => set("addressLine", e.target.value)} />
+              <Input
+                id="address"
+                value={form.address_line}
+                onChange={(e) => set("address_line", e.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="city">City</Label>
               <Input id="city" value={form.city} onChange={(e) => set("city", e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="state">State</Label>
+              <Label htmlFor="state">State / division</Label>
               <Input id="state" value={form.state} onChange={(e) => set("state", e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="pincode">Pincode</Label>
+              <Label htmlFor="pincode">Postcode</Label>
               <Input id="pincode" value={form.pincode} onChange={(e) => set("pincode", e.target.value)} />
             </div>
           </CardContent>
@@ -168,7 +282,7 @@ function InstitutionSettings() {
 
         <Card className="shadow-[var(--shadow-card)]">
           <CardHeader>
-            <CardTitle className="text-base">Vision & mission</CardTitle>
+            <CardTitle className="text-base">Vision &amp; mission</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
             <div className="space-y-2">
@@ -177,7 +291,12 @@ function InstitutionSettings() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="mission">Mission</Label>
-              <Textarea id="mission" rows={3} value={form.mission} onChange={(e) => set("mission", e.target.value)} />
+              <Textarea
+                id="mission"
+                rows={3}
+                value={form.mission}
+                onChange={(e) => set("mission", e.target.value)}
+              />
             </div>
           </CardContent>
         </Card>
@@ -190,7 +309,7 @@ function InstitutionSettings() {
           <CardContent className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label>Attainment scale</Label>
-              <Select value={form.attainmentScale} onValueChange={(v) => set("attainmentScale", v)}>
+              <Select value={form.attainment_scale} onValueChange={(v) => set("attainment_scale", v)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -207,8 +326,8 @@ function InstitutionSettings() {
               <Label htmlFor="target">Target attainment</Label>
               <Input
                 id="target"
-                value={form.targetAttainment}
-                onChange={(e) => set("targetAttainment", e.target.value)}
+                value={form.target_attainment}
+                onChange={(e) => set("target_attainment", e.target.value)}
               />
             </div>
             <Separator className="md:col-span-2" />
@@ -218,8 +337,8 @@ function InstitutionSettings() {
                 <p className="text-sm text-muted-foreground">Blend survey feedback into final attainment.</p>
               </div>
               <Switch
-                checked={form.enableIndirectFeedback}
-                onCheckedChange={(v) => set("enableIndirectFeedback", v)}
+                checked={form.enable_indirect_feedback}
+                onCheckedChange={(v) => set("enable_indirect_feedback", v)}
               />
             </div>
             <div className="flex items-center justify-between md:col-span-2">
@@ -228,8 +347,8 @@ function InstitutionSettings() {
                 <p className="text-sm text-muted-foreground">Recompute after every mark entry cycle.</p>
               </div>
               <Switch
-                checked={form.autoCalculateAttainment}
-                onCheckedChange={(v) => set("autoCalculateAttainment", v)}
+                checked={form.auto_calculate_attainment}
+                onCheckedChange={(v) => set("auto_calculate_attainment", v)}
               />
             </div>
           </CardContent>
@@ -237,11 +356,11 @@ function InstitutionSettings() {
 
         <div className="sticky bottom-0 flex items-center justify-end gap-3 border-t border-border bg-background/90 py-4 backdrop-blur">
           {dirty && <p className="mr-auto text-sm text-muted-foreground">Unsaved changes</p>}
-          <Button type="button" variant="outline" onClick={() => setForm(saved)} disabled={!dirty}>
+          <Button type="button" variant="outline" onClick={() => data && setForm(data)} disabled={!dirty}>
             Reset
           </Button>
-          <Button type="submit" disabled={!dirty}>
-            Save changes
+          <Button type="submit" disabled={!dirty || saveMutation.isPending}>
+            {saveMutation.isPending ? "Saving…" : "Save changes"}
           </Button>
         </div>
       </form>
