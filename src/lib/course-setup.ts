@@ -240,7 +240,7 @@ export function useReferenceData() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("program_outcomes")
-        .select("id, code, title, display_order, is_active")
+        .select("id, code, title, description, display_order, is_active")
         .order("display_order");
       if (error) throw error;
       return data ?? [];
@@ -252,7 +252,7 @@ export function useReferenceData() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("knowledge_profiles")
-        .select("id, code, title, display_order, is_active")
+        .select("id, code, title, description, display_order, is_active")
         .order("display_order");
       if (error) throw error;
       return data ?? [];
@@ -264,7 +264,7 @@ export function useReferenceData() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("complex_problem_attributes")
-        .select("id, code, category, title, display_order, is_active")
+        .select("id, code, category, title, description, display_order, is_active")
         .order("display_order");
       if (error) throw error;
       return data ?? [];
