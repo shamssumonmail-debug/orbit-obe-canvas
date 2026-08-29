@@ -8,6 +8,7 @@ import { AppShell } from "@/components/obe/app-shell";
 import { RequireAuth } from "@/components/obe/require-auth";
 import {
   BasicInfoForm,
+  basicInfoPayload,
   emptyBasicInfo,
   validateBasicInfo,
   type BasicInfoValue,
@@ -46,6 +47,7 @@ import {
   STATUS_LABEL,
   isCoordinator,
   profileLabel,
+  saveConsultationSlots,
   useCurrentUserId,
   useReferenceData,
   type CourseOffering,
