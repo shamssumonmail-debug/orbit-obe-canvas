@@ -103,7 +103,10 @@ export type CourseOutcome = {
   co_statement: string;
   bloom_taxonomy_level_id: string;
   display_order: number;
+  delivery_methods: string | null;
+  assessment_methods: string | null;
 };
+
 
 export type AssessmentTool = {
   id: string;
