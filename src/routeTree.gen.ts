@@ -22,6 +22,7 @@ import { Route as MasterDataProgramOutcomesRouteImport } from './routes/master-d
 import { Route as MasterDataSemesterTypesRouteImport } from './routes/master-data.semester-types'
 import { Route as SettingsFacultyRouteImport } from './routes/settings.faculty'
 import { Route as SettingsInstitutionRouteImport } from './routes/settings.institution'
+import { Route as CourseSetupReportIdRouteImport } from './routes/course-setup.report.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -93,6 +94,11 @@ const SettingsInstitutionRoute = SettingsInstitutionRouteImport.update({
   path: '/settings/institution',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CourseSetupReportIdRoute = CourseSetupReportIdRouteImport.update({
+  id: '/course-setup/report/$id',
+  path: '/course-setup/report/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/settings/faculty': typeof SettingsFacultyRoute
   '/settings/institution': typeof SettingsInstitutionRoute
   '/course-setup/': typeof CourseSetupIndexRoute
+  '/course-setup/report/$id': typeof CourseSetupReportIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/settings/faculty': typeof SettingsFacultyRoute
   '/settings/institution': typeof SettingsInstitutionRoute
   '/course-setup': typeof CourseSetupIndexRoute
+  '/course-setup/report/$id': typeof CourseSetupReportIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/settings/faculty': typeof SettingsFacultyRoute
   '/settings/institution': typeof SettingsInstitutionRoute
   '/course-setup/': typeof CourseSetupIndexRoute
+  '/course-setup/report/$id': typeof CourseSetupReportIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/settings/faculty'
     | '/settings/institution'
     | '/course-setup/'
+    | '/course-setup/report/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/settings/faculty'
     | '/settings/institution'
     | '/course-setup'
+    | '/course-setup/report/$id'
   id:
     | '__root__'
     | '/'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/settings/faculty'
     | '/settings/institution'
     | '/course-setup/'
+    | '/course-setup/report/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -202,6 +214,7 @@ export interface RootRouteChildren {
   SettingsFacultyRoute: typeof SettingsFacultyRoute
   SettingsInstitutionRoute: typeof SettingsInstitutionRoute
   CourseSetupIndexRoute: typeof CourseSetupIndexRoute
+  CourseSetupReportIdRoute: typeof CourseSetupReportIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -297,6 +310,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsInstitutionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/course-setup/report/$id': {
+      id: '/course-setup/report/$id'
+      path: '/course-setup/report/$id'
+      fullPath: '/course-setup/report/$id'
+      preLoaderRoute: typeof CourseSetupReportIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -315,6 +335,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsFacultyRoute: SettingsFacultyRoute,
   SettingsInstitutionRoute: SettingsInstitutionRoute,
   CourseSetupIndexRoute: CourseSetupIndexRoute,
+  CourseSetupReportIdRoute: CourseSetupReportIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
