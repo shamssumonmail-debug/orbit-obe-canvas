@@ -8,6 +8,7 @@ import { AppShell } from "@/components/obe/app-shell";
 import { RequireAuth } from "@/components/obe/require-auth";
 import {
   BasicInfoForm,
+  basicInfoPayload,
   emptyBasicInfo,
   validateBasicInfo,
   type BasicInfoValue,
@@ -24,6 +25,8 @@ import { useAuth } from "@/lib/mock-auth";
 import {
   STATUS_LABEL,
   canEditOffering,
+  saveConsultationSlots,
+  useConsultationSlots,
   useCurrentUserId,
   useReferenceData,
   type CourseOffering,
@@ -132,6 +135,7 @@ function CourseOfferingDetail() {
       toast.success("Basic info saved");
       void queryClient.invalidateQueries({ queryKey: ["course-setup", "offering", id] });
       void queryClient.invalidateQueries({ queryKey: ["course-setup", "offerings"] });
+      void queryClient.invalidateQueries({ queryKey: ["course-setup", "consultation-slots", id] });
     },
     onError: (e: Error) => toast.error(e.message),
   });
