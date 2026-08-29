@@ -477,7 +477,30 @@ function CoEditor({
             </SelectContent>
           </Select>
         </div>
+        <div className="space-y-2">
+          <Label htmlFor={`delivery-${co.id}`}>Delivery methods and activities</Label>
+          <Textarea
+            id={`delivery-${co.id}`}
+            rows={3}
+            value={delivery}
+            placeholder={"- Lecture\n- PP Presentation\n- Think – Pair – Share (TPS)"}
+            disabled={readOnly}
+            onChange={(e) => setDelivery(e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor={`assessment-${co.id}`}>Assessment method</Label>
+          <Textarea
+            id={`assessment-${co.id}`}
+            rows={3}
+            value={assessment}
+            placeholder={"- Class Performance\n- Quiz\n- Final Exam"}
+            disabled={readOnly}
+            onChange={(e) => setAssessment(e.target.value)}
+          />
+        </div>
       </div>
+
 
       <div className="grid gap-4 lg:grid-cols-3">
         <CheckboxGroup
