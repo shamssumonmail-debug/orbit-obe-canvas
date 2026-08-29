@@ -15,6 +15,7 @@ import {
 } from "@/components/obe/course-setup/basic-info-form";
 import { ApprovalTab } from "@/components/obe/course-setup/approval-tab";
 import { CourseOutcomesTab } from "@/components/obe/course-setup/course-outcomes-tab";
+import { ReferencesTab } from "@/components/obe/course-setup/references-tab";
 import { WeeklyScheduleTab } from "@/components/obe/course-setup/weekly-schedule-tab";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -189,6 +190,13 @@ function CourseOfferingDetail() {
               <ArrowLeft className="mr-2 size-4" /> All offerings
             </Link>
           </Button>
+          {o.status === "approved" && (
+            <Button asChild size="sm" variant="outline">
+              <Link to="/course-setup/report/$id" params={{ id: o.id }}>
+                View approved report
+              </Link>
+            </Button>
+          )}
           <Badge variant={o.status === "approved" ? "default" : o.status === "checked" ? "secondary" : "outline"}>
             {STATUS_LABEL[o.status]}
           </Badge>
@@ -207,6 +215,7 @@ function CourseOfferingDetail() {
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
             <TabsTrigger value="outcomes">Course Outcomes</TabsTrigger>
             <TabsTrigger value="schedule">Weekly Schedule</TabsTrigger>
+            <TabsTrigger value="references">References</TabsTrigger>
             <TabsTrigger value="approval">Approval</TabsTrigger>
           </TabsList>
 
@@ -227,6 +236,10 @@ function CourseOfferingDetail() {
 
           <TabsContent value="schedule">
             <WeeklyScheduleTab offeringId={o.id} readOnly={readOnly} />
+          </TabsContent>
+
+          <TabsContent value="references">
+            <ReferencesTab offeringId={o.id} readOnly={readOnly} />
           </TabsContent>
 
           <TabsContent value="approval">

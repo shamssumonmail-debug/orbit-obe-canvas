@@ -101,7 +101,7 @@ export function ApprovalTab({ offering }: { offering: CourseOffering }) {
           <Field label="Section" value={offering.section} />
           <Field label="Course type" value={offering.course_type} />
           <Field label="Credit hours" value={String(offering.credit_hours)} />
-          <Field label="Instructor" value={profileLabel(findProfile(offering.instructor_id))} />
+          <Field label="Faculty" value={profileLabel(findProfile(offering.instructor_id))} />
           <Field label="Consultation hours" value={offering.consultation_hours || "—"} />
           <Field
             label="Grading weights"
@@ -243,7 +243,7 @@ export function ApprovalTab({ offering }: { offering: CourseOffering }) {
               id="review_comment"
               rows={3}
               value={comment}
-              placeholder="Notes for the instructor — required when sending back to draft."
+              placeholder="Notes for the faculty member — required when sending back to draft."
               disabled={!coordinator}
               onChange={(e) => setComment(e.target.value)}
             />

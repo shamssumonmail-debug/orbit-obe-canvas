@@ -187,7 +187,7 @@ function CourseSetupList() {
           <div>
             <CardTitle>Course Offerings</CardTitle>
             <CardDescription>
-              One record per course, term, section and instructor — mirroring the printed Course Details Form.
+              One record per course, term, section and faculty — mirroring the printed Course Details Form.
             </CardDescription>
           </div>
           {canCreate && (
@@ -202,7 +202,7 @@ function CourseSetupList() {
               <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 className="pl-9"
-                placeholder="Search course, section or instructor…"
+                placeholder="Search course, section or faculty…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -254,7 +254,7 @@ function CourseSetupList() {
                     <TableHead>Course</TableHead>
                     <TableHead className="w-40">Term</TableHead>
                     <TableHead className="w-28">Section</TableHead>
-                    <TableHead className="w-48">Instructor</TableHead>
+                    <TableHead className="w-48">Faculty</TableHead>
                     <TableHead className="w-28">Status</TableHead>
                     <TableHead className="w-20">COs</TableHead>
                     <TableHead className="w-24" />

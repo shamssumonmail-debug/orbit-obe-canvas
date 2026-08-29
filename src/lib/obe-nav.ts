@@ -26,6 +26,7 @@ export type NavItem = {
     | "/dashboard"
     | "/course-setup"
     | "/settings/institution"
+    | "/settings/faculty"
     | "/master-data/program-outcomes"
     | "/master-data/knowledge-profiles"
     | "/master-data/complex-problem-attributes"
@@ -129,6 +130,12 @@ export const navSections: NavSection[] = [
     items: [
       { label: "Reports", icon: FileBarChart, comingSoon: true, roles: ["super_admin"] },
       { label: "Users & Roles", icon: Users, comingSoon: true, roles: ["super_admin"] },
+      {
+        label: "Faculty",
+        icon: Users,
+        to: "/settings/faculty",
+        roles: ["super_admin"],
+      },
       {
         label: "Settings",
         icon: Settings,
