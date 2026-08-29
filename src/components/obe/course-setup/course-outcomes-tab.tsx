@@ -48,7 +48,10 @@ export function useCourseOutcomes(offeringId: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("course_outcomes")
-        .select("id, course_offering_id, co_number, co_statement, bloom_taxonomy_level_id, display_order")
+        .select(
+          "id, course_offering_id, co_number, co_statement, bloom_taxonomy_level_id, display_order, delivery_methods, assessment_methods",
+        )
+
         .eq("course_offering_id", offeringId)
         .order("display_order");
       if (error) throw error;
