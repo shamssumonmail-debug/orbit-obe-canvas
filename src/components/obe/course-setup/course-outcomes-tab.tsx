@@ -390,7 +390,13 @@ function CoEditor({
 
       const { error: coError } = await supabase
         .from("course_outcomes")
-        .update({ co_statement: statement.trim(), bloom_taxonomy_level_id: bloomId })
+        .update({
+          co_statement: statement.trim(),
+          bloom_taxonomy_level_id: bloomId,
+          delivery_methods: delivery.trim() || null,
+          assessment_methods: assessment.trim() || null,
+        })
+
         .eq("id", co.id);
       if (coError) throw coError;
 
