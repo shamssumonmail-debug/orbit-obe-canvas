@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -20,8 +20,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { profileLabel, useReferenceData } from "@/lib/course-setup";
+import { WEEKDAYS, profileLabel, useReferenceData } from "@/lib/course-setup";
+
+export type ConsultationSlotDraft = {
+  key: string;
+  day_of_week: string;
+  start_time: string;
+  end_time: string;
+};
 
 export type BasicInfoValue = {
   department_id: string;
@@ -30,9 +38,17 @@ export type BasicInfoValue = {
   semester_type_id: string;
   section: string;
   course_type: "Theory" | "Sessional";
+  course_category: "Core" | "Elective";
   credit_hours: number;
   instructor_id: string;
   consultation_hours: string;
+  programme: string;
+  faculty_name: string;
+  level_year: number;
+  level_semester: number;
+  synopsis: string;
+  prerequisites: string;
+  consultation_slots: ConsultationSlotDraft[];
   grading_weight_class_performance: number;
   grading_weight_quiz_assignment: number;
   grading_weight_final: number;
@@ -47,12 +63,20 @@ export function emptyBasicInfo(): BasicInfoValue {
     semester_type_id: "",
     section: "",
     course_type: "Theory",
+    course_category: "Core",
     credit_hours: 3,
     instructor_id: "",
     consultation_hours: "",
-    grading_weight_class_performance: 30,
+    programme: "",
+    faculty_name: "Engineering",
+    level_year: 1,
+    level_semester: 1,
+    synopsis: "",
+    prerequisites: "",
+    consultation_slots: [],
+    grading_weight_class_performance: 10,
     grading_weight_quiz_assignment: 20,
-    grading_weight_final: 50,
+    grading_weight_final: 70,
     co_attainment_target_percent: 60,
   };
 }
@@ -69,11 +93,41 @@ export function validateBasicInfo(v: BasicInfoValue): string | null {
   if (!v.curriculum_course_id) return "Select a curriculum course";
   if (!v.semester_type_id) return "Select a semester";
   if (!v.section.trim()) return "Section is required";
-  if (!v.instructor_id) return "Select an instructor";
+  if (!v.instructor_id) return "Select a faculty member";
   if (!Number.isFinite(v.credit_hours) || v.credit_hours <= 0) return "Credit hours must be greater than 0";
   if (v.academic_year < 2015 || v.academic_year > 2100) return "Academic year must be between 2015 and 2100";
+  for (const s of v.consultation_slots) {
+    if (!s.day_of_week) return "Every consultation slot needs a day";
+    if (!s.start_time || !s.end_time) return "Every consultation slot needs a start and end time";
+    if (s.start_time >= s.end_time) return `Consultation slot on ${s.day_of_week} ends before it starts`;
+  }
   if (gradingTotal(v) !== 100) return "Grading weights must add up to exactly 100%";
   return null;
+}
+
+/** Columns of `course_offerings` that this form writes. */
+export function basicInfoPayload(v: BasicInfoValue) {
+  return {
+    curriculum_course_id: v.curriculum_course_id,
+    academic_year: v.academic_year,
+    semester_type_id: v.semester_type_id,
+    section: v.section.trim(),
+    course_type: v.course_type,
+    course_category: v.course_category,
+    credit_hours: v.credit_hours,
+    instructor_id: v.instructor_id,
+    consultation_hours: v.consultation_hours.trim() || null,
+    programme: v.programme.trim() || null,
+    faculty_name: v.faculty_name.trim() || null,
+    level_year: v.level_year || null,
+    level_semester: v.level_semester || null,
+    synopsis: v.synopsis.trim() || null,
+    prerequisites: v.prerequisites.trim() || null,
+    grading_weight_class_performance: v.grading_weight_class_performance,
+    grading_weight_quiz_assignment: v.grading_weight_quiz_assignment,
+    grading_weight_final: v.grading_weight_final,
+    co_attainment_target_percent: v.co_attainment_target_percent,
+  };
 }
 
 export function BasicInfoForm({
@@ -100,7 +154,10 @@ export function BasicInfoForm({
   );
 
   const selectedCourse = courses.find((c) => c.id === value.curriculum_course_id);
+  const selectedFaculty = profiles.find((p) => p.id === value.instructor_id);
   const total = gradingTotal(value);
+
+  const setSlots = (next: ConsultationSlotDraft[]) => set("consultation_slots", next);
 
   return (
     <div className="space-y-6">
@@ -198,7 +255,7 @@ export function BasicInfoForm({
         </div>
 
         <div className="space-y-2">
-          <Label>Semester *</Label>
+          <Label>Semester offered *</Label>
           <Select
             value={value.semester_type_id}
             onValueChange={(v) => set("semester_type_id", v)}
@@ -218,6 +275,54 @@ export function BasicInfoForm({
         </div>
 
         <div className="space-y-2">
+          <Label htmlFor="level_year">Level — year *</Label>
+          <Input
+            id="level_year"
+            type="number"
+            min={1}
+            max={6}
+            value={value.level_year}
+            disabled={disabled}
+            onChange={(e) => set("level_year", Number(e.target.value))}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="level_semester">Level — semester *</Label>
+          <Input
+            id="level_semester"
+            type="number"
+            min={1}
+            max={3}
+            value={value.level_semester}
+            disabled={disabled}
+            onChange={(e) => set("level_semester", Number(e.target.value))}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="programme">Programme</Label>
+          <Input
+            id="programme"
+            value={value.programme}
+            placeholder="e.g. B.Sc. in Electrical and Electronic Engineering (EEE)"
+            disabled={disabled}
+            onChange={(e) => set("programme", e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="faculty_name">Faculty (school)</Label>
+          <Input
+            id="faculty_name"
+            value={value.faculty_name}
+            placeholder="e.g. Engineering"
+            disabled={disabled}
+            onChange={(e) => set("faculty_name", e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-2">
           <Label htmlFor="section">Section *</Label>
           <Input
             id="section"
@@ -229,7 +334,7 @@ export function BasicInfoForm({
         </div>
 
         <div className="space-y-2">
-          <Label>Course type *</Label>
+          <Label>Delivery type *</Label>
           <Select
             value={value.course_type}
             onValueChange={(v) => set("course_type", v as BasicInfoValue["course_type"])}
@@ -241,6 +346,23 @@ export function BasicInfoForm({
             <SelectContent>
               <SelectItem value="Theory">Theory</SelectItem>
               <SelectItem value="Sessional">Sessional</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Type of course (core / elective) *</Label>
+          <Select
+            value={value.course_category}
+            onValueChange={(v) => set("course_category", v as BasicInfoValue["course_category"])}
+            disabled={disabled}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Core">Core</SelectItem>
+              <SelectItem value="Elective">Elective</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -258,15 +380,38 @@ export function BasicInfoForm({
           />
         </div>
 
+        <div className="space-y-2 md:col-span-2">
+          <Label htmlFor="synopsis">Synopsis</Label>
+          <Textarea
+            id="synopsis"
+            rows={5}
+            value={value.synopsis}
+            placeholder="Course synopsis as printed in the Course Details Form…"
+            disabled={disabled}
+            onChange={(e) => set("synopsis", e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-2 md:col-span-2">
+          <Label htmlFor="prerequisites">Prerequisite(s) (if any)</Label>
+          <Input
+            id="prerequisites"
+            value={value.prerequisites}
+            placeholder="e.g. EEE 2101, or N/A"
+            disabled={disabled}
+            onChange={(e) => set("prerequisites", e.target.value)}
+          />
+        </div>
+
         <div className="space-y-2">
-          <Label>Instructor *</Label>
+          <Label>Course faculty (instructor) *</Label>
           <Select
             value={value.instructor_id}
             onValueChange={(v) => set("instructor_id", v)}
             disabled={disabled}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select instructor" />
+              <SelectValue placeholder="Select faculty" />
             </SelectTrigger>
             <SelectContent>
               {profiles.map((p) => (
@@ -276,14 +421,26 @@ export function BasicInfoForm({
               ))}
             </SelectContent>
           </Select>
+          {selectedFaculty && (
+            <p className="text-xs text-muted-foreground">
+              {[
+                selectedFaculty.designation,
+                selectedFaculty.room_no ? `Room ${selectedFaculty.room_no}` : null,
+                selectedFaculty.phone,
+                selectedFaculty.email,
+              ]
+                .filter(Boolean)
+                .join(" · ") || "Add phone, room and designation on the Faculty page."}
+            </p>
+          )}
         </div>
 
-        <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="consultation_hours">Consultation hours</Label>
+        <div className="space-y-2">
+          <Label htmlFor="consultation_hours">Consultation hours note</Label>
           <Input
             id="consultation_hours"
             value={value.consultation_hours}
-            placeholder="e.g. Sun & Tue, 2:00 PM – 4:00 PM"
+            placeholder="Optional extra note"
             disabled={disabled}
             onChange={(e) => set("consultation_hours", e.target.value)}
           />
@@ -293,7 +450,108 @@ export function BasicInfoForm({
       <div className="rounded-lg border border-border p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <p className="text-sm font-semibold">Grading weights</p>
+            <p className="text-sm font-semibold">Consultation hour slots</p>
+            <p className="text-xs text-muted-foreground">
+              Add one row per weekly slot — printed as bullets under item 12.
+            </p>
+          </div>
+          {!disabled && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                setSlots([
+                  ...value.consultation_slots,
+                  {
+                    key: `slot-${Date.now()}-${value.consultation_slots.length}`,
+                    day_of_week: "Sunday",
+                    start_time: "10:30",
+                    end_time: "12:10",
+                  },
+                ])
+              }
+            >
+              <Plus className="mr-2 size-4" /> Add slot
+            </Button>
+          )}
+        </div>
+
+        <div className="mt-4 space-y-3">
+          {value.consultation_slots.length === 0 && (
+            <p className="text-sm text-muted-foreground">No consultation slots added yet.</p>
+          )}
+          {value.consultation_slots.map((s, i) => (
+            <div key={s.key} className="grid gap-2 sm:grid-cols-[1fr_auto_auto_auto] sm:items-end">
+              <div className="space-y-1">
+                <Label className="text-xs">Day</Label>
+                <Select
+                  value={s.day_of_week}
+                  disabled={disabled}
+                  onValueChange={(v) =>
+                    setSlots(value.consultation_slots.map((x, xi) => (xi === i ? { ...x, day_of_week: v } : x)))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {WEEKDAYS.map((d) => (
+                      <SelectItem key={d} value={d}>
+                        {d}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">From</Label>
+                <Input
+                  type="time"
+                  value={s.start_time}
+                  disabled={disabled}
+                  onChange={(e) =>
+                    setSlots(
+                      value.consultation_slots.map((x, xi) =>
+                        xi === i ? { ...x, start_time: e.target.value } : x,
+                      ),
+                    )
+                  }
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">To</Label>
+                <Input
+                  type="time"
+                  value={s.end_time}
+                  disabled={disabled}
+                  onChange={(e) =>
+                    setSlots(
+                      value.consultation_slots.map((x, xi) => (xi === i ? { ...x, end_time: e.target.value } : x)),
+                    )
+                  }
+                />
+              </div>
+              {!disabled && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  aria-label={`Remove ${s.day_of_week} slot`}
+                  onClick={() => setSlots(value.consultation_slots.filter((_, xi) => xi !== i))}
+                >
+                  <Trash2 className="size-4 text-destructive" />
+                </Button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-border p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <p className="text-sm font-semibold">Percentages of assessment methods</p>
             <p className="text-xs text-muted-foreground">Must total exactly 100%.</p>
           </div>
           <p
@@ -319,7 +577,7 @@ export function BasicInfoForm({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="gw_qa">Quiz / assignment %</Label>
+            <Label htmlFor="gw_qa">Quizzes / assignments %</Label>
             <Input
               id="gw_qa"
               type="number"
@@ -331,7 +589,7 @@ export function BasicInfoForm({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="gw_final">Final %</Label>
+            <Label htmlFor="gw_final">Final examination %</Label>
             <Input
               id="gw_final"
               type="number"

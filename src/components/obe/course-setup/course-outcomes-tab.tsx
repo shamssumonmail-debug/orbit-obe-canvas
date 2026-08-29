@@ -48,7 +48,10 @@ export function useCourseOutcomes(offeringId: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("course_outcomes")
-        .select("id, course_offering_id, co_number, co_statement, bloom_taxonomy_level_id, display_order")
+        .select(
+          "id, course_offering_id, co_number, co_statement, bloom_taxonomy_level_id, display_order, delivery_methods, assessment_methods",
+        )
+
         .eq("course_offering_id", offeringId)
         .order("display_order");
       if (error) throw error;
@@ -339,6 +342,9 @@ function CoEditor({
 
   const [statement, setStatement] = useState(co.co_statement);
   const [bloomId, setBloomId] = useState(co.bloom_taxonomy_level_id);
+  const [delivery, setDelivery] = useState(co.delivery_methods ?? "");
+  const [assessment, setAssessment] = useState(co.assessment_methods ?? "");
+
   const [poIds, setPoIds] = useState<string[]>(initialPo);
   const [kpIds, setKpIds] = useState<string[]>(initialKp);
   const [paIds, setPaIds] = useState<string[]>(initialPa);
@@ -384,7 +390,13 @@ function CoEditor({
 
       const { error: coError } = await supabase
         .from("course_outcomes")
-        .update({ co_statement: statement.trim(), bloom_taxonomy_level_id: bloomId })
+        .update({
+          co_statement: statement.trim(),
+          bloom_taxonomy_level_id: bloomId,
+          delivery_methods: delivery.trim() || null,
+          assessment_methods: assessment.trim() || null,
+        })
+
         .eq("id", co.id);
       if (coError) throw coError;
 
@@ -465,7 +477,30 @@ function CoEditor({
             </SelectContent>
           </Select>
         </div>
+        <div className="space-y-2">
+          <Label htmlFor={`delivery-${co.id}`}>Delivery methods and activities</Label>
+          <Textarea
+            id={`delivery-${co.id}`}
+            rows={3}
+            value={delivery}
+            placeholder={"- Lecture\n- PP Presentation\n- Think – Pair – Share (TPS)"}
+            disabled={readOnly}
+            onChange={(e) => setDelivery(e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor={`assessment-${co.id}`}>Assessment method</Label>
+          <Textarea
+            id={`assessment-${co.id}`}
+            rows={3}
+            value={assessment}
+            placeholder={"- Class Performance\n- Quiz\n- Final Exam"}
+            disabled={readOnly}
+            onChange={(e) => setAssessment(e.target.value)}
+          />
+        </div>
       </div>
+
 
       <div className="grid gap-4 lg:grid-cols-3">
         <CheckboxGroup

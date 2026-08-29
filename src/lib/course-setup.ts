@@ -47,7 +47,54 @@ export type CourseOffering = {
   created_by: string;
   created_at: string;
   updated_at: string;
+  synopsis: string | null;
+  course_category: "Core" | "Elective";
+  prerequisites: string | null;
+  programme: string | null;
+  faculty_name: string | null;
+  level_year: number | null;
+  level_semester: number | null;
 };
+
+export type ConsultationSlot = {
+  id: string;
+  course_offering_id: string;
+  day_of_week: string;
+  start_time: string;
+  end_time: string;
+  display_order: number;
+};
+
+export type CourseReference = {
+  id: string;
+  course_offering_id: string;
+  kind: "required" | "recommended";
+  citation: string;
+  display_order: number;
+};
+
+export const WEEKDAYS = [
+  "Saturday",
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+] as const;
+
+export function formatTime(t: string): string {
+  const [h, m] = t.split(":");
+  const hour = Number(h);
+  const suffix = hour >= 12 ? "PM" : "AM";
+  const display = hour % 12 === 0 ? 12 : hour % 12;
+  return `${display}:${m ?? "00"} ${suffix}`;
+}
+
+export function formatSlot(s: { day_of_week: string; start_time: string; end_time: string }): string {
+  return `${s.day_of_week} ${formatTime(s.start_time)} – ${formatTime(s.end_time)}`;
+}
+
 
 export type CourseOutcome = {
   id: string;
@@ -56,7 +103,10 @@ export type CourseOutcome = {
   co_statement: string;
   bloom_taxonomy_level_id: string;
   display_order: number;
+  delivery_methods: string | null;
+  assessment_methods: string | null;
 };
+
 
 export type AssessmentTool = {
   id: string;
@@ -74,9 +124,20 @@ export type WeeklyScheduleRow = {
   topic: string;
   course_outcome_id: string | null;
   delivery_method: string | null;
+  assessment_strategy: string | null;
 };
 
-export type Profile = { id: string; full_name: string | null; email: string | null };
+export type Profile = {
+  id: string;
+  full_name: string | null;
+  email: string | null;
+  phone?: string | null;
+  designation?: string | null;
+  room_no?: string | null;
+  department_id?: string | null;
+  is_active?: boolean | null;
+};
+
 
 /** Editing is blocked once approved (for everyone) and once out of draft for non-managers. */
 export function canEditOffering(
@@ -152,7 +213,11 @@ export function useReferenceData() {
   const profiles = useQuery({
     queryKey: ["course-setup", "profiles"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("profiles").select("id, full_name, email").order("full_name");
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, full_name, email, phone, designation, room_no, department_id, is_active")
+        .order("full_name");
+
       if (error) throw error;
       return (data ?? []) as Profile[];
     },
@@ -175,7 +240,7 @@ export function useReferenceData() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("program_outcomes")
-        .select("id, code, title, display_order, is_active")
+        .select("id, code, title, description, display_order, is_active")
         .order("display_order");
       if (error) throw error;
       return data ?? [];
@@ -187,7 +252,7 @@ export function useReferenceData() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("knowledge_profiles")
-        .select("id, code, title, display_order, is_active")
+        .select("id, code, title, description, display_order, is_active")
         .order("display_order");
       if (error) throw error;
       return data ?? [];
@@ -199,7 +264,7 @@ export function useReferenceData() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("complex_problem_attributes")
-        .select("id, code, category, title, display_order, is_active")
+        .select("id, code, category, title, description, display_order, is_active")
         .order("display_order");
       if (error) throw error;
       return data ?? [];
@@ -227,4 +292,59 @@ export function useReferenceData() {
 export function profileLabel(p: Profile | undefined): string {
   if (!p) return "—";
   return p.full_name || p.email || p.id.slice(0, 8);
+}
+
+export function useConsultationSlots(offeringId: string) {
+  return useQuery({
+    queryKey: ["course-setup", "consultation-slots", offeringId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("course_consultation_slots")
+        .select("id, course_offering_id, day_of_week, start_time, end_time, display_order")
+        .eq("course_offering_id", offeringId)
+        .order("display_order");
+      if (error) throw error;
+      return (data ?? []) as ConsultationSlot[];
+    },
+    enabled: !!offeringId,
+  });
+}
+
+export function useCourseReferences(offeringId: string) {
+  return useQuery({
+    queryKey: ["course-setup", "references", offeringId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("course_references")
+        .select("id, course_offering_id, kind, citation, display_order")
+        .eq("course_offering_id", offeringId)
+        .order("display_order");
+      if (error) throw error;
+      return (data ?? []) as CourseReference[];
+    },
+    enabled: !!offeringId,
+  });
+}
+
+/** Replaces all consultation slots for an offering (small data, delete-then-insert). */
+export async function saveConsultationSlots(
+  offeringId: string,
+  slots: { day_of_week: string; start_time: string; end_time: string }[],
+): Promise<void> {
+  const { error: delError } = await supabase
+    .from("course_consultation_slots")
+    .delete()
+    .eq("course_offering_id", offeringId);
+  if (delError) throw delError;
+  if (!slots.length) return;
+  const { error } = await supabase.from("course_consultation_slots").insert(
+    slots.map((s, i) => ({
+      course_offering_id: offeringId,
+      day_of_week: s.day_of_week,
+      start_time: s.start_time,
+      end_time: s.end_time,
+      display_order: i,
+    })),
+  );
+  if (error) throw error;
 }
