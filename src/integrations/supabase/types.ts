@@ -259,6 +259,47 @@ export type Database = {
         }
         Relationships: []
       }
+      course_consultation_slots: {
+        Row: {
+          course_offering_id: string
+          created_at: string
+          day_of_week: string
+          display_order: number
+          end_time: string
+          id: string
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          course_offering_id: string
+          created_at?: string
+          day_of_week: string
+          display_order?: number
+          end_time: string
+          id?: string
+          start_time: string
+          updated_at?: string
+        }
+        Update: {
+          course_offering_id?: string
+          created_at?: string
+          day_of_week?: string
+          display_order?: number
+          end_time?: string
+          id?: string
+          start_time?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_consultation_slots_course_offering_id_fkey"
+            columns: ["course_offering_id"]
+            isOneToOne: false
+            referencedRelation: "course_offerings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_offerings: {
         Row: {
           academic_year: number
@@ -268,20 +309,27 @@ export type Database = {
           checked_by: string | null
           co_attainment_target_percent: number
           consultation_hours: string | null
+          course_category: string
           course_type: string
           created_at: string
           created_by: string
           credit_hours: number
           curriculum_course_id: string
+          faculty_name: string | null
           grading_weight_class_performance: number
           grading_weight_final: number
           grading_weight_quiz_assignment: number
           id: string
           instructor_id: string
+          level_semester: number | null
+          level_year: number | null
+          prerequisites: string | null
+          programme: string | null
           review_comment: string | null
           section: string
           semester_type_id: string
           status: string
+          synopsis: string | null
           updated_at: string
         }
         Insert: {
@@ -292,20 +340,27 @@ export type Database = {
           checked_by?: string | null
           co_attainment_target_percent?: number
           consultation_hours?: string | null
+          course_category?: string
           course_type: string
           created_at?: string
           created_by: string
           credit_hours: number
           curriculum_course_id: string
+          faculty_name?: string | null
           grading_weight_class_performance?: number
           grading_weight_final?: number
           grading_weight_quiz_assignment?: number
           id?: string
           instructor_id: string
+          level_semester?: number | null
+          level_year?: number | null
+          prerequisites?: string | null
+          programme?: string | null
           review_comment?: string | null
           section: string
           semester_type_id: string
           status?: string
+          synopsis?: string | null
           updated_at?: string
         }
         Update: {
@@ -316,20 +371,27 @@ export type Database = {
           checked_by?: string | null
           co_attainment_target_percent?: number
           consultation_hours?: string | null
+          course_category?: string
           course_type?: string
           created_at?: string
           created_by?: string
           credit_hours?: number
           curriculum_course_id?: string
+          faculty_name?: string | null
           grading_weight_class_performance?: number
           grading_weight_final?: number
           grading_weight_quiz_assignment?: number
           id?: string
           instructor_id?: string
+          level_semester?: number | null
+          level_year?: number | null
+          prerequisites?: string | null
+          programme?: string | null
           review_comment?: string | null
           section?: string
           semester_type_id?: string
           status?: string
+          synopsis?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -379,31 +441,37 @@ export type Database = {
       }
       course_outcomes: {
         Row: {
+          assessment_methods: string | null
           bloom_taxonomy_level_id: string
           co_number: string
           co_statement: string
           course_offering_id: string
           created_at: string
+          delivery_methods: string | null
           display_order: number
           id: string
           updated_at: string
         }
         Insert: {
+          assessment_methods?: string | null
           bloom_taxonomy_level_id: string
           co_number: string
           co_statement: string
           course_offering_id: string
           created_at?: string
+          delivery_methods?: string | null
           display_order?: number
           id?: string
           updated_at?: string
         }
         Update: {
+          assessment_methods?: string | null
           bloom_taxonomy_level_id?: string
           co_number?: string
           co_statement?: string
           course_offering_id?: string
           created_at?: string
+          delivery_methods?: string | null
           display_order?: number
           id?: string
           updated_at?: string
@@ -425,8 +493,47 @@ export type Database = {
           },
         ]
       }
+      course_references: {
+        Row: {
+          citation: string
+          course_offering_id: string
+          created_at: string
+          display_order: number
+          id: string
+          kind: string
+          updated_at: string
+        }
+        Insert: {
+          citation: string
+          course_offering_id: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          kind?: string
+          updated_at?: string
+        }
+        Update: {
+          citation?: string
+          course_offering_id?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          kind?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_references_course_offering_id_fkey"
+            columns: ["course_offering_id"]
+            isOneToOne: false
+            referencedRelation: "course_offerings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_weekly_schedule: {
         Row: {
+          assessment_strategy: string | null
           course_offering_id: string
           course_outcome_id: string | null
           created_at: string
@@ -437,6 +544,7 @@ export type Database = {
           week_number: number
         }
         Insert: {
+          assessment_strategy?: string | null
           course_offering_id: string
           course_outcome_id?: string | null
           created_at?: string
@@ -447,6 +555,7 @@ export type Database = {
           week_number: number
         }
         Update: {
+          assessment_strategy?: string | null
           course_offering_id?: string
           course_outcome_id?: string | null
           created_at?: string
@@ -535,6 +644,90 @@ export type Database = {
         }
         Relationships: []
       }
+      institution_profile: {
+        Row: {
+          academic_year: string
+          accreditation: string
+          address_line: string
+          affiliated_to: string
+          attainment_scale: string
+          auto_calculate_attainment: boolean
+          city: string
+          code: string
+          created_at: string
+          email: string
+          enable_indirect_feedback: boolean
+          id: string
+          logo_url: string | null
+          mission: string
+          name: string
+          phone: string
+          pincode: string
+          short_name: string
+          sponsor_line: string
+          state: string
+          target_attainment: string
+          term: string
+          updated_at: string
+          vision: string
+          website: string
+        }
+        Insert: {
+          academic_year?: string
+          accreditation?: string
+          address_line?: string
+          affiliated_to?: string
+          attainment_scale?: string
+          auto_calculate_attainment?: boolean
+          city?: string
+          code?: string
+          created_at?: string
+          email?: string
+          enable_indirect_feedback?: boolean
+          id?: string
+          logo_url?: string | null
+          mission?: string
+          name?: string
+          phone?: string
+          pincode?: string
+          short_name?: string
+          sponsor_line?: string
+          state?: string
+          target_attainment?: string
+          term?: string
+          updated_at?: string
+          vision?: string
+          website?: string
+        }
+        Update: {
+          academic_year?: string
+          accreditation?: string
+          address_line?: string
+          affiliated_to?: string
+          attainment_scale?: string
+          auto_calculate_attainment?: boolean
+          city?: string
+          code?: string
+          created_at?: string
+          email?: string
+          enable_indirect_feedback?: boolean
+          id?: string
+          logo_url?: string | null
+          mission?: string
+          name?: string
+          phone?: string
+          pincode?: string
+          short_name?: string
+          sponsor_line?: string
+          state?: string
+          target_attainment?: string
+          term?: string
+          updated_at?: string
+          vision?: string
+          website?: string
+        }
+        Relationships: []
+      }
       knowledge_profiles: {
         Row: {
           code: string
@@ -607,26 +800,49 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          department_id: string | null
+          designation: string | null
           email: string | null
           full_name: string | null
           id: string
+          is_active: boolean
+          phone: string | null
+          room_no: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
+          department_id?: string | null
+          designation?: string | null
           email?: string | null
           full_name?: string | null
           id: string
+          is_active?: boolean
+          phone?: string | null
+          room_no?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
+          department_id?: string | null
+          designation?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
+          is_active?: boolean
+          phone?: string | null
+          room_no?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       program_outcomes: {
         Row: {
