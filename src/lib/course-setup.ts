@@ -47,7 +47,54 @@ export type CourseOffering = {
   created_by: string;
   created_at: string;
   updated_at: string;
+  synopsis: string | null;
+  course_category: "Core" | "Elective";
+  prerequisites: string | null;
+  programme: string | null;
+  faculty_name: string | null;
+  level_year: number | null;
+  level_semester: number | null;
 };
+
+export type ConsultationSlot = {
+  id: string;
+  course_offering_id: string;
+  day_of_week: string;
+  start_time: string;
+  end_time: string;
+  display_order: number;
+};
+
+export type CourseReference = {
+  id: string;
+  course_offering_id: string;
+  kind: "required" | "recommended";
+  citation: string;
+  display_order: number;
+};
+
+export const WEEKDAYS = [
+  "Saturday",
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+] as const;
+
+export function formatTime(t: string): string {
+  const [h, m] = t.split(":");
+  const hour = Number(h);
+  const suffix = hour >= 12 ? "PM" : "AM";
+  const display = hour % 12 === 0 ? 12 : hour % 12;
+  return `${display}:${m ?? "00"} ${suffix}`;
+}
+
+export function formatSlot(s: { day_of_week: string; start_time: string; end_time: string }): string {
+  return `${s.day_of_week} ${formatTime(s.start_time)} – ${formatTime(s.end_time)}`;
+}
+
 
 export type CourseOutcome = {
   id: string;
