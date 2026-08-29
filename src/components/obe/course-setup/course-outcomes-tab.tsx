@@ -342,6 +342,9 @@ function CoEditor({
 
   const [statement, setStatement] = useState(co.co_statement);
   const [bloomId, setBloomId] = useState(co.bloom_taxonomy_level_id);
+  const [delivery, setDelivery] = useState(co.delivery_methods ?? "");
+  const [assessment, setAssessment] = useState(co.assessment_methods ?? "");
+
   const [poIds, setPoIds] = useState<string[]>(initialPo);
   const [kpIds, setKpIds] = useState<string[]>(initialKp);
   const [paIds, setPaIds] = useState<string[]>(initialPa);
