@@ -293,3 +293,58 @@ export function profileLabel(p: Profile | undefined): string {
   if (!p) return "—";
   return p.full_name || p.email || p.id.slice(0, 8);
 }
+
+export function useConsultationSlots(offeringId: string) {
+  return useQuery({
+    queryKey: ["course-setup", "consultation-slots", offeringId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("course_consultation_slots")
+        .select("id, course_offering_id, day_of_week, start_time, end_time, display_order")
+        .eq("course_offering_id", offeringId)
+        .order("display_order");
+      if (error) throw error;
+      return (data ?? []) as ConsultationSlot[];
+    },
+    enabled: !!offeringId,
+  });
+}
+
+export function useCourseReferences(offeringId: string) {
+  return useQuery({
+    queryKey: ["course-setup", "references", offeringId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("course_references")
+        .select("id, course_offering_id, kind, citation, display_order")
+        .eq("course_offering_id", offeringId)
+        .order("display_order");
+      if (error) throw error;
+      return (data ?? []) as CourseReference[];
+    },
+    enabled: !!offeringId,
+  });
+}
+
+/** Replaces all consultation slots for an offering (small data, delete-then-insert). */
+export async function saveConsultationSlots(
+  offeringId: string,
+  slots: { day_of_week: string; start_time: string; end_time: string }[],
+): Promise<void> {
+  const { error: delError } = await supabase
+    .from("course_consultation_slots")
+    .delete()
+    .eq("course_offering_id", offeringId);
+  if (delError) throw delError;
+  if (!slots.length) return;
+  const { error } = await supabase.from("course_consultation_slots").insert(
+    slots.map((s, i) => ({
+      course_offering_id: offeringId,
+      day_of_week: s.day_of_week,
+      start_time: s.start_time,
+      end_time: s.end_time,
+      display_order: i,
+    })),
+  );
+  if (error) throw error;
+}
