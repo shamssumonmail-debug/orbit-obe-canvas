@@ -98,7 +98,7 @@ export async function uploadLogo(file: File): Promise<string> {
   const { error } = await supabase.storage.from(LOGO_BUCKET).upload(path, file, {
     cacheControl: "3600",
     upsert: true,
-    contentType: file.type || undefined,
+    ...(file.type ? { contentType: file.type } : {}),
   });
   if (error) throw error;
   return path;
