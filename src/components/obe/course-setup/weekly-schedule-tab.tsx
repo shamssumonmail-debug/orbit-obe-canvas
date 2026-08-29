@@ -21,6 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import type { WeeklyScheduleRow } from "@/lib/course-setup";
 import { useCourseOutcomes } from "./course-outcomes-tab";
@@ -31,6 +32,7 @@ type DraftWeek = {
   topic: string;
   course_outcome_id: string;
   delivery_method: string;
+  assessment_strategy: string;
 };
 
 export function useWeeklySchedule(offeringId: string) {
@@ -39,7 +41,9 @@ export function useWeeklySchedule(offeringId: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("course_weekly_schedule")
-        .select("id, course_offering_id, week_number, topic, course_outcome_id, delivery_method")
+        .select(
+          "id, course_offering_id, week_number, topic, course_outcome_id, delivery_method, assessment_strategy",
+        )
         .eq("course_offering_id", offeringId)
         .order("week_number");
       if (error) throw error;
@@ -69,6 +73,7 @@ export function WeeklyScheduleTab({
         topic: r.topic,
         course_outcome_id: r.course_outcome_id ?? "",
         delivery_method: r.delivery_method ?? "",
+        assessment_strategy: r.assessment_strategy ?? "",
       })),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,6 +104,7 @@ export function WeeklyScheduleTab({
             topic: r.topic.trim(),
             course_outcome_id: r.course_outcome_id || null,
             delivery_method: r.delivery_method.trim() || null,
+            assessment_strategy: r.assessment_strategy.trim() || null,
           })),
         );
         if (error) throw error;
@@ -125,21 +131,26 @@ export function WeeklyScheduleTab({
 
   return (
     <div className="space-y-4">
+      <p className="text-sm text-muted-foreground">
+        Item 15 — week-wise distribution of contents, teaching-learning strategy, assessment strategy and the
+        corresponding COs.
+      </p>
       <div className="overflow-x-auto rounded-lg border border-border">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-24">Week</TableHead>
-              <TableHead>Topic</TableHead>
-              <TableHead className="w-40">Course outcome</TableHead>
-              <TableHead className="w-48">Delivery method</TableHead>
+              <TableHead className="w-20">Week</TableHead>
+              <TableHead>Topics</TableHead>
+              <TableHead className="w-48">Teaching-learning strategy</TableHead>
+              <TableHead className="w-48">Assessment strategy</TableHead>
+              <TableHead className="w-40">Corresponding CO</TableHead>
               {!readOnly && <TableHead className="w-12" />}
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={readOnly ? 4 : 5} className="text-sm text-muted-foreground">
+                <TableCell colSpan={readOnly ? 5 : 6} className="text-sm text-muted-foreground">
                   No weeks added yet.
                 </TableCell>
               </TableRow>
@@ -160,12 +171,39 @@ export function WeeklyScheduleTab({
                   />
                 </TableCell>
                 <TableCell>
-                  <Input
+                  <Textarea
+                    rows={2}
                     value={r.topic}
-                    placeholder="Topic covered this week"
+                    placeholder="Topics covered this week"
                     disabled={readOnly}
                     onChange={(e) =>
                       setRows((prev) => prev.map((x, xi) => (xi === i ? { ...x, topic: e.target.value } : x)))
+                    }
+                  />
+                </TableCell>
+                <TableCell>
+                  <Textarea
+                    rows={2}
+                    value={r.delivery_method}
+                    placeholder="Lecture, lab, PP presentation…"
+                    disabled={readOnly}
+                    onChange={(e) =>
+                      setRows((prev) =>
+                        prev.map((x, xi) => (xi === i ? { ...x, delivery_method: e.target.value } : x)),
+                      )
+                    }
+                  />
+                </TableCell>
+                <TableCell>
+                  <Textarea
+                    rows={2}
+                    value={r.assessment_strategy}
+                    placeholder="Class performance, Quiz 1…"
+                    disabled={readOnly}
+                    onChange={(e) =>
+                      setRows((prev) =>
+                        prev.map((x, xi) => (xi === i ? { ...x, assessment_strategy: e.target.value } : x)),
+                      )
                     }
                   />
                 </TableCell>
@@ -193,18 +231,6 @@ export function WeeklyScheduleTab({
                       ))}
                     </SelectContent>
                   </Select>
-                </TableCell>
-                <TableCell>
-                  <Input
-                    value={r.delivery_method}
-                    placeholder="Lecture, lab, project…"
-                    disabled={readOnly}
-                    onChange={(e) =>
-                      setRows((prev) =>
-                        prev.map((x, xi) => (xi === i ? { ...x, delivery_method: e.target.value } : x)),
-                      )
-                    }
-                  />
                 </TableCell>
                 {!readOnly && (
                   <TableCell>
@@ -237,6 +263,7 @@ export function WeeklyScheduleTab({
                   topic: "",
                   course_outcome_id: "",
                   delivery_method: "",
+                  assessment_strategy: "",
                 },
               ])
             }
