@@ -8,6 +8,7 @@ import { AppShell } from "@/components/obe/app-shell";
 import { RequireAuth } from "@/components/obe/require-auth";
 import {
   BasicInfoForm,
+  basicInfoPayload,
   emptyBasicInfo,
   validateBasicInfo,
   type BasicInfoValue,
@@ -24,6 +25,8 @@ import { useAuth } from "@/lib/mock-auth";
 import {
   STATUS_LABEL,
   canEditOffering,
+  saveConsultationSlots,
+  useConsultationSlots,
   useCurrentUserId,
   useReferenceData,
   type CourseOffering,
@@ -80,8 +83,10 @@ function CourseOfferingDetail() {
     },
   });
 
+  const slots = useConsultationSlots(id);
   const [form, setForm] = useState<BasicInfoValue>(emptyBasicInfo);
   const loadedAt = offering.data?.updated_at;
+  const slotsKey = (slots.data ?? []).map((s) => s.id).join(",");
 
   useEffect(() => {
     const o = offering.data;
@@ -94,32 +99,43 @@ function CourseOfferingDetail() {
       semester_type_id: o.semester_type_id,
       section: o.section,
       course_type: o.course_type,
+      course_category: o.course_category ?? "Core",
       credit_hours: Number(o.credit_hours),
       instructor_id: o.instructor_id,
       consultation_hours: o.consultation_hours ?? "",
+      programme: o.programme ?? "",
+      faculty_name: o.faculty_name ?? "",
+      level_year: o.level_year ?? 1,
+      level_semester: o.level_semester ?? 1,
+      synopsis: o.synopsis ?? "",
+      prerequisites: o.prerequisites ?? "",
+      consultation_slots: (slots.data ?? []).map((s) => ({
+        key: s.id,
+        day_of_week: s.day_of_week,
+        start_time: s.start_time,
+        end_time: s.end_time,
+      })),
       grading_weight_class_performance: Number(o.grading_weight_class_performance),
       grading_weight_quiz_assignment: Number(o.grading_weight_quiz_assignment),
       grading_weight_final: Number(o.grading_weight_final),
       co_attainment_target_percent: Number(o.co_attainment_target_percent),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadedAt, courses.length]);
+  }, [loadedAt, courses.length, slotsKey]);
 
   const saveBasics = useMutation({
     mutationFn: async () => {
       const problem = validateBasicInfo(form);
       if (problem) throw new Error(problem);
-      const { department_id: _dept, ...rest } = form;
-      const { error } = await supabase
-        .from("course_offerings")
-        .update({ ...rest, consultation_hours: form.consultation_hours.trim() || null })
-        .eq("id", id);
+      const { error } = await supabase.from("course_offerings").update(basicInfoPayload(form)).eq("id", id);
       if (error) throw error;
+      await saveConsultationSlots(id, form.consultation_slots);
     },
     onSuccess: () => {
       toast.success("Basic info saved");
       void queryClient.invalidateQueries({ queryKey: ["course-setup", "offering", id] });
       void queryClient.invalidateQueries({ queryKey: ["course-setup", "offerings"] });
+      void queryClient.invalidateQueries({ queryKey: ["course-setup", "consultation-slots", id] });
     },
     onError: (e: Error) => toast.error(e.message),
   });

@@ -8,6 +8,7 @@ import { AppShell } from "@/components/obe/app-shell";
 import { RequireAuth } from "@/components/obe/require-auth";
 import {
   BasicInfoForm,
+  basicInfoPayload,
   emptyBasicInfo,
   validateBasicInfo,
   type BasicInfoValue,
@@ -46,6 +47,7 @@ import {
   STATUS_LABEL,
   isCoordinator,
   profileLabel,
+  saveConsultationSlots,
   useCurrentUserId,
   useReferenceData,
   type CourseOffering,
@@ -133,17 +135,13 @@ function CourseSetupList() {
       const problem = validateBasicInfo(form);
       if (problem) throw new Error(problem);
       if (!userId) throw new Error("Your session is still loading — try again in a moment");
-      const { department_id: _dept, ...rest } = form;
       const { data, error } = await supabase
         .from("course_offerings")
-        .insert({
-          ...rest,
-          consultation_hours: form.consultation_hours.trim() || null,
-          created_by: userId,
-        })
+        .insert({ ...basicInfoPayload(form), created_by: userId })
         .select("id")
         .single();
       if (error) throw error;
+      await saveConsultationSlots(data.id as string, form.consultation_slots);
       return data.id as string;
     },
     onSuccess: (id) => {
