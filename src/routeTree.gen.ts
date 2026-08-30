@@ -22,6 +22,7 @@ import { Route as MasterDataProgramOutcomesRouteImport } from './routes/master-d
 import { Route as MasterDataSemesterTypesRouteImport } from './routes/master-data.semester-types'
 import { Route as SettingsFacultyRouteImport } from './routes/settings.faculty'
 import { Route as SettingsInstitutionRouteImport } from './routes/settings.institution'
+import { Route as SettingsProfileRouteImport } from './routes/settings.profile'
 import { Route as CourseSetupReportIdRouteImport } from './routes/course-setup.report.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -94,6 +95,11 @@ const SettingsInstitutionRoute = SettingsInstitutionRouteImport.update({
   path: '/settings/institution',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsProfileRoute = SettingsProfileRouteImport.update({
+  id: '/settings/profile',
+  path: '/settings/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CourseSetupReportIdRoute = CourseSetupReportIdRouteImport.update({
   id: '/course-setup/report/$id',
   path: '/course-setup/report/$id',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/faculty': typeof SettingsFacultyRoute
   '/settings/institution': typeof SettingsInstitutionRoute
+  '/settings/profile': typeof SettingsProfileRoute
   '/course-setup/': typeof CourseSetupIndexRoute
   '/course-setup/report/$id': typeof CourseSetupReportIdRoute
 }
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/faculty': typeof SettingsFacultyRoute
   '/settings/institution': typeof SettingsInstitutionRoute
+  '/settings/profile': typeof SettingsProfileRoute
   '/course-setup': typeof CourseSetupIndexRoute
   '/course-setup/report/$id': typeof CourseSetupReportIdRoute
 }
@@ -146,6 +154,7 @@ export interface FileRoutesById {
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
   '/settings/faculty': typeof SettingsFacultyRoute
   '/settings/institution': typeof SettingsInstitutionRoute
+  '/settings/profile': typeof SettingsProfileRoute
   '/course-setup/': typeof CourseSetupIndexRoute
   '/course-setup/report/$id': typeof CourseSetupReportIdRoute
 }
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
     | '/master-data/semester-types'
     | '/settings/faculty'
     | '/settings/institution'
+    | '/settings/profile'
     | '/course-setup/'
     | '/course-setup/report/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/master-data/semester-types'
     | '/settings/faculty'
     | '/settings/institution'
+    | '/settings/profile'
     | '/course-setup'
     | '/course-setup/report/$id'
   id:
@@ -196,6 +207,7 @@ export interface FileRouteTypes {
     | '/master-data/semester-types'
     | '/settings/faculty'
     | '/settings/institution'
+    | '/settings/profile'
     | '/course-setup/'
     | '/course-setup/report/$id'
   fileRoutesById: FileRoutesById
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   MasterDataSemesterTypesRoute: typeof MasterDataSemesterTypesRoute
   SettingsFacultyRoute: typeof SettingsFacultyRoute
   SettingsInstitutionRoute: typeof SettingsInstitutionRoute
+  SettingsProfileRoute: typeof SettingsProfileRoute
   CourseSetupIndexRoute: typeof CourseSetupIndexRoute
   CourseSetupReportIdRoute: typeof CourseSetupReportIdRoute
 }
@@ -310,6 +323,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsInstitutionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings/profile': {
+      id: '/settings/profile'
+      path: '/settings/profile'
+      fullPath: '/settings/profile'
+      preLoaderRoute: typeof SettingsProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/course-setup/report/$id': {
       id: '/course-setup/report/$id'
       path: '/course-setup/report/$id'
@@ -334,6 +354,7 @@ const rootRouteChildren: RootRouteChildren = {
   MasterDataSemesterTypesRoute: MasterDataSemesterTypesRoute,
   SettingsFacultyRoute: SettingsFacultyRoute,
   SettingsInstitutionRoute: SettingsInstitutionRoute,
+  SettingsProfileRoute: SettingsProfileRoute,
   CourseSetupIndexRoute: CourseSetupIndexRoute,
   CourseSetupReportIdRoute: CourseSetupReportIdRoute,
 }

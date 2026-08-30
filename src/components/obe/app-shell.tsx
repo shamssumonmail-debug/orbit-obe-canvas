@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Bell, ChevronDown, LogOut, Menu, PanelLeftClose, Search } from "lucide-react";
+import { Bell, ChevronDown, LogOut, Menu, PanelLeftClose, Search, UserCog } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -18,18 +18,29 @@ import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/mock-auth";
 import { sectionsForRole } from "@/lib/obe-nav";
-import { institutionProfile } from "@/lib/obe-mock-data";
+import { useInstitution, useLogoUrl } from "@/lib/institution";
+import { useMyProfile } from "@/lib/profile";
 
 function Brand({ compact = false }: { compact?: boolean }) {
+  const { data: institution } = useInstitution();
+  const logoUrl = useLogoUrl(institution?.logo_url);
   return (
     <div className="flex items-center gap-3 px-4 py-5">
-      <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-sidebar-primary text-sm font-bold text-sidebar-primary-foreground">
-        OBE
-      </div>
+      {logoUrl ? (
+        <img
+          src={logoUrl}
+          alt={`${institution?.name ?? "Institution"} logo`}
+          className="size-9 shrink-0 rounded-lg bg-sidebar-primary-foreground object-contain p-0.5"
+        />
+      ) : (
+        <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-sidebar-primary text-sm font-bold text-sidebar-primary-foreground">
+          OBE
+        </div>
+      )}
       {!compact && (
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-sidebar-foreground">OBE Suite</p>
-          <p className="truncate text-xs text-sidebar-foreground/60">{institutionProfile.code}</p>
+          <p className="truncate text-xs text-sidebar-foreground/60">{institution?.code ?? "—"}</p>
         </div>
       )}
     </div>
@@ -104,6 +115,9 @@ export function AppShell({
   children: React.ReactNode;
 }) {
   const { user, signOut } = useAuth();
+  const { data: institution } = useInstitution();
+  const { data: profile } = useMyProfile();
+  const displayName = profile?.full_name?.trim() || user?.name || "";
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(true);
@@ -169,7 +183,7 @@ export function AppShell({
 
             <div className="ml-auto flex items-center gap-2">
               <Badge variant="secondary" className="hidden sm:inline-flex">
-                {institutionProfile.academicYear} · {institutionProfile.term}
+                {institution?.academic_year ?? "—"} · {institution?.term ?? "—"}
               </Badge>
               <Button variant="ghost" size="icon" aria-label="Notifications">
                 <Bell className="size-5" />
@@ -178,10 +192,10 @@ export function AppShell({
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="gap-2 px-2">
                     <span className="grid size-8 place-items-center rounded-full bg-primary-soft text-xs font-semibold text-primary">
-                      {user?.name.slice(0, 2).toUpperCase()}
+                      {displayName.slice(0, 2).toUpperCase()}
                     </span>
                     <span className="hidden text-left sm:block">
-                      <span className="block text-sm font-medium leading-tight">{user?.name}</span>
+                      <span className="block text-sm font-medium leading-tight">{displayName}</span>
                       <span className="block text-xs leading-tight text-muted-foreground">{user?.roleLabel}</span>
                     </span>
                     <ChevronDown className="size-4 text-muted-foreground" />
@@ -191,6 +205,12 @@ export function AppShell({
                   <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
                     {user?.email}
                   </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/settings/profile">
+                      <UserCog className="mr-2 size-4" /> Profile settings
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onSelect={handleSignOut}>
                     <LogOut className="mr-2 size-4" /> Sign out
@@ -204,7 +224,7 @@ export function AppShell({
               <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
               {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
             </div>
-            <p className="text-xs text-muted-foreground">{institutionProfile.name}</p>
+            <p className="text-xs text-muted-foreground">{institution?.name ?? ""}</p>
           </div>
         </header>
 
