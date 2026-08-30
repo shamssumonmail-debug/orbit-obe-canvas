@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/lib/mock-auth";
+import { useInstitution, useLogoUrl } from "@/lib/institution";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,6 +37,9 @@ const DEMO = {
 
 function LoginPage() {
   const { signIn, user, hydrated } = useAuth();
+  const { data: institution } = useInstitution();
+  const logoUrl = useLogoUrl(institution?.logo_url);
+  const instName = institution?.name ?? "OBE Suite";
   const navigate = useNavigate();
   const [tab, setTab] = useState<"super_admin" | "faculty">("super_admin");
   const [email, setEmail] = useState("");
@@ -84,11 +88,19 @@ function LoginPage() {
           }}
         />
         <div className="relative flex items-center gap-3">
-          <div className="grid size-11 place-items-center rounded-xl bg-sidebar-primary text-sm font-bold text-sidebar-primary-foreground">
-            OBE
-          </div>
-          <div>
-            <p className="text-sm font-semibold">OBE Suite</p>
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt={`${instName} logo`}
+              className="size-11 shrink-0 rounded-xl bg-sidebar-primary-foreground object-contain p-1"
+            />
+          ) : (
+            <div className="grid size-11 place-items-center rounded-xl bg-sidebar-primary text-sm font-bold text-sidebar-primary-foreground">
+              OBE
+            </div>
+          )}
+          <div className="min-w-0">
+            <p className="text-sm font-semibold">{instName}</p>
             <p className="text-xs text-sidebar-foreground/60">Outcome Based Education platform</p>
           </div>
         </div>
@@ -123,10 +135,17 @@ function LoginPage() {
       <section className="flex items-center justify-center bg-background px-5 py-12">
         <div className="w-full max-w-md">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <div className="grid size-10 place-items-center rounded-xl bg-primary text-sm font-bold text-primary-foreground">
-              OBE
+            {logoUrl ? (
+              <img src={logoUrl} alt={`${instName} logo`} className="size-10 shrink-0 object-contain" />
+            ) : (
+              <div className="grid size-10 place-items-center rounded-xl bg-primary text-sm font-bold text-primary-foreground">
+                OBE
+              </div>
+            )}
+            <div className="min-w-0">
+              <p className="truncate font-semibold">{instName}</p>
+              <p className="text-xs text-muted-foreground">Outcome Based Education platform</p>
             </div>
-            <p className="font-semibold">OBE Suite</p>
           </div>
 
           <h1 className="font-display text-2xl font-semibold tracking-tight">Sign in to your institution</h1>
