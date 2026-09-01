@@ -45,7 +45,7 @@ function splitEvenly(total: number, count: number) {
   const base = Math.floor((total / count) * 10) / 10;
   const parts = Array.from({ length: count }, () => base);
   const remainder = Math.round((total - base * count) * 10) / 10;
-  if (remainder !== 0) parts[0] = Math.round((parts[0] + remainder) * 10) / 10;
+  if (remainder !== 0) parts[0] = Math.round((base + remainder) * 10) / 10;
   return parts;
 }
 
@@ -85,7 +85,7 @@ export function CascadingSelectorDialog({
     const parts = q.parts
       ? (() => {
           const values = splitEvenly(q.maxScore, q.parts.length);
-          return q.parts.map((p, i) => ({ label: p.label, maxScore: values[i] }));
+          return q.parts.map((p, i) => ({ label: p.label, maxScore: values[i] ?? 0 }));
         })()
       : [];
     emit({ coId, refId: q.id, label: q.label, maxScore: q.maxScore, parts });
