@@ -23,6 +23,7 @@ import { Route as MasterDataSemesterTypesRouteImport } from './routes/master-dat
 import { Route as SettingsFacultyRouteImport } from './routes/settings.faculty'
 import { Route as SettingsInstitutionRouteImport } from './routes/settings.institution'
 import { Route as SettingsProfileRouteImport } from './routes/settings.profile'
+import { Route as AssessmentCoAssessmentIndexRouteImport } from './routes/assessment.co-assessment.index'
 import { Route as CourseSetupReportIdRouteImport } from './routes/course-setup.report.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -100,6 +101,12 @@ const SettingsProfileRoute = SettingsProfileRouteImport.update({
   path: '/settings/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssessmentCoAssessmentIndexRoute =
+  AssessmentCoAssessmentIndexRouteImport.update({
+    id: '/assessment/co-assessment/',
+    path: '/assessment/co-assessment/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const CourseSetupReportIdRoute = CourseSetupReportIdRouteImport.update({
   id: '/course-setup/report/$id',
   path: '/course-setup/report/$id',
@@ -122,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/settings/profile': typeof SettingsProfileRoute
   '/course-setup/': typeof CourseSetupIndexRoute
   '/course-setup/report/$id': typeof CourseSetupReportIdRoute
+  '/assessment/co-assessment/': typeof AssessmentCoAssessmentIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -139,6 +147,7 @@ export interface FileRoutesByTo {
   '/settings/profile': typeof SettingsProfileRoute
   '/course-setup': typeof CourseSetupIndexRoute
   '/course-setup/report/$id': typeof CourseSetupReportIdRoute
+  '/assessment/co-assessment': typeof AssessmentCoAssessmentIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -157,6 +166,7 @@ export interface FileRoutesById {
   '/settings/profile': typeof SettingsProfileRoute
   '/course-setup/': typeof CourseSetupIndexRoute
   '/course-setup/report/$id': typeof CourseSetupReportIdRoute
+  '/assessment/co-assessment/': typeof AssessmentCoAssessmentIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/settings/profile'
     | '/course-setup/'
     | '/course-setup/report/$id'
+    | '/assessment/co-assessment/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/settings/profile'
     | '/course-setup'
     | '/course-setup/report/$id'
+    | '/assessment/co-assessment'
   id:
     | '__root__'
     | '/'
@@ -210,6 +222,7 @@ export interface FileRouteTypes {
     | '/settings/profile'
     | '/course-setup/'
     | '/course-setup/report/$id'
+    | '/assessment/co-assessment/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -228,6 +241,7 @@ export interface RootRouteChildren {
   SettingsProfileRoute: typeof SettingsProfileRoute
   CourseSetupIndexRoute: typeof CourseSetupIndexRoute
   CourseSetupReportIdRoute: typeof CourseSetupReportIdRoute
+  AssessmentCoAssessmentIndexRoute: typeof AssessmentCoAssessmentIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -330,6 +344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assessment/co-assessment/': {
+      id: '/assessment/co-assessment/'
+      path: '/assessment/co-assessment'
+      fullPath: '/assessment/co-assessment/'
+      preLoaderRoute: typeof AssessmentCoAssessmentIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/course-setup/report/$id': {
       id: '/course-setup/report/$id'
       path: '/course-setup/report/$id'
@@ -357,6 +378,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsProfileRoute: SettingsProfileRoute,
   CourseSetupIndexRoute: CourseSetupIndexRoute,
   CourseSetupReportIdRoute: CourseSetupReportIdRoute,
+  AssessmentCoAssessmentIndexRoute: AssessmentCoAssessmentIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
