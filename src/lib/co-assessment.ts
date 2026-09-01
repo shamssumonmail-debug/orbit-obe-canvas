@@ -277,7 +277,7 @@ export function achievementScore(obtained: number, max: number) {
 
 /** Remaining score still to be distributed across a section's items. */
 export function remainingForSection(section: ScoreSection) {
-  return Math.round((Number(section.maxScore) || 0) - itemsTotal(section) * 10) / 10 || (Number(section.maxScore) || 0) - itemsTotal(section);
+  return Math.round(((Number(section.maxScore) || 0) - itemsTotal(section)) * 10) / 10;
 }
 
 export const sourceLabels: Record<SectionSource, string> = {
