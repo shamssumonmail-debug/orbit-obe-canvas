@@ -24,6 +24,7 @@ export type NavItem = {
   icon: typeof LayoutDashboard;
   to?:
     | "/dashboard"
+    | "/assessment/co-assessment"
     | "/course-setup"
     | "/settings/institution"
     | "/settings/faculty"
@@ -120,6 +121,12 @@ export const navSections: NavSection[] = [
   {
     title: "Assessment",
     items: [
+      {
+        label: "CO Assessment",
+        icon: Gauge,
+        to: "/assessment/co-assessment",
+        roles: ["super_admin", "faculty"],
+      },
       { label: "Exams & Marks", icon: ClipboardList, comingSoon: true, roles: ["super_admin", "faculty"] },
       { label: "Rubrics", icon: ListChecks, comingSoon: true, roles: ["super_admin"] },
       { label: "Attainment Engine", icon: BarChart3, comingSoon: true, roles: ["super_admin"] },
