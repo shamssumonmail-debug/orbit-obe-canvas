@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import {
+  achievementScore,
   grandMaxScore,
   leafIdsForSection,
   sectionTotal,
@@ -38,12 +39,17 @@ export function ScoreEntryTable({ sections, students, onScoreChange }: Props) {
                 colSpan={leafIdsForSection(section).length + 2}
                 className="border-b border-l p-2 text-center"
               >
-                {section.name || "Untitled section"}{" "}
-                <span className="text-xs font-normal text-muted-foreground">({section.maxScore})</span>
+                <span className="block font-semibold">{section.name || "Untitled section"}</span>
+                <span className="block text-xs font-normal text-muted-foreground">
+                  Score: {section.maxScore}
+                </span>
               </th>
             ))}
             <th rowSpan={hasParts ? 3 : 2} className="border-b border-l p-2 text-center align-bottom">
-              Total Achievement Number
+              <span className="block">Total Achievement Number</span>
+              <span className="block text-xs font-normal text-muted-foreground">
+                Out of {totalMax}
+              </span>
             </th>
             <th rowSpan={hasParts ? 3 : 2} className="border-b p-2 text-center align-bottom">
               Achievement Percentage
@@ -133,8 +139,7 @@ export function ScoreEntryTable({ sections, students, onScoreChange }: Props) {
                     key={`${section.id}-ach`}
                     className="border-b bg-muted/40 p-2 text-center font-medium tabular-nums"
                   >
-                    {/* TODO: confirm Achievement Score formula with domain lead before backend build */}
-                    {totals[index]}
+                    {achievementScore(totals[index] ?? 0, sections[index]?.maxScore ?? 0)}%
                   </td>,
                 ])}
                 <td className="border-b border-l bg-primary/5 p-2 text-center font-semibold tabular-nums">
