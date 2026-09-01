@@ -16,10 +16,14 @@ export type ScoreItem = {
   parts: ScoreItemPart[];
 };
 
+export type SectionSource = "manual" | "quiz" | "final";
+
 export type ScoreSection = {
   id: string;
   name: string;
   maxScore: number;
+  /** Where this section's columns come from: entered manually, from quizzes, or final-exam questions. */
+  source: SectionSource;
   items: ScoreItem[];
 };
 
@@ -263,4 +267,27 @@ export function structureValid(sections: ScoreSection[]) {
 
 export function grandMaxScore(sections: ScoreSection[]) {
   return sections.reduce((sum, s) => sum + (Number(s.maxScore) || 0), 0);
+}
+
+/** Achievement score for a section = obtained / max, expressed out of 100 (1 decimal). */
+export function achievementScore(obtained: number, max: number) {
+  if (!max) return 0;
+  return Math.round((obtained / max) * 1000) / 10;
+}
+
+/** Remaining score still to be distributed across a section's items. */
+export function remainingForSection(section: ScoreSection) {
+  return Math.round((Number(section.maxScore) || 0) - itemsTotal(section) * 10) / 10 || (Number(section.maxScore) || 0) - itemsTotal(section);
+}
+
+export const sourceLabels: Record<SectionSource, string> = {
+  manual: "Manual (single score column)",
+  quiz: "From Quiz (CO -> Quiz -> Questions)",
+  final: "From Final Exam (CO -> Exam -> Questions)",
+};
+
+/** Label for the add button, e.g. "Add Quiz 1" / "Add Question 2". */
+export function addButtonLabel(section: ScoreSection) {
+  const noun = section.source === "final" ? "Question" : section.name.trim() || "Item";
+  return `Add ${noun} ${section.items.length + 1}`;
 }
