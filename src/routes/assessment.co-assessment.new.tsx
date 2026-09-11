@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Check, Eye, Save } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -259,7 +259,7 @@ function NewCoAssessmentRoute() {
                 Yes, save as draft
               </AlertDialogAction>
             </AlertDialogFooter>
-          </AlertDialogFooter>
+          </AlertDialogContent>
         </AlertDialog>
       </AppShell>
     </RequireAuth>

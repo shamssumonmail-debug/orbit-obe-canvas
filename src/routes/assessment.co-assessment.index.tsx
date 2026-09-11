@@ -41,6 +41,7 @@ const statusVariant: Record<AssessmentStatus, "default" | "secondary" | "outline
   Complete: "default",
   "Scoring In Progress": "secondary",
   "Structure Configured": "outline",
+  Draft: "outline",
 };
 
 function CoAssessmentListRoute() {
