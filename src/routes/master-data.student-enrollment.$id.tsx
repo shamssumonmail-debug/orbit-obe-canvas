@@ -140,7 +140,7 @@ function BatchRoute() {
   const handleFile = async (file: File) => {
     try {
       const book = XLSX.read(await file.arrayBuffer(), { type: "array" });
-      const sheet = book.Sheets[book.SheetNames[0]];
+      const sheet = book.Sheets[book.SheetNames[0] ?? ""];
       if (!sheet) throw new Error("the file is empty");
       const rows = XLSX.utils.sheet_to_json<(string | number)[]>(sheet, {
         header: 1,

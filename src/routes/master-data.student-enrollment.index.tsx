@@ -69,7 +69,7 @@ function StudentEnrollmentRoute() {
               <CardDescription>Each batch name is unique across the institution.</CardDescription>
             </div>
             <Button asChild>
-              <Link to="/master-data/student-enrollment/$id" params={{ id: "new" }}>
+              <Link to="/master-data/student-enrollment/$id" params={{ id: "new" }} search={{ view: undefined }}>
                 <Plus className="mr-1 h-4 w-4" /> Add Batch
               </Link>
             </Button>
@@ -130,7 +130,7 @@ function StudentEnrollmentRoute() {
                                 navigate({
                                   to: "/master-data/student-enrollment/$id",
                                   params: { id: batch.id },
-                                  search: {},
+                                  search: { view: undefined },
                                 })
                               }
                             >
