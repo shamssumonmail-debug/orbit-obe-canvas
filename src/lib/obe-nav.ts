@@ -34,7 +34,9 @@ export type NavItem = {
     | "/master-data/bloom-taxonomy-levels"
     | "/master-data/attainment-scale"
     | "/master-data/semester-types"
-    | "/master-data/departments";
+    | "/master-data/departments"
+    | "/master-data/student-enrollment"
+    | "/reports/attainment";
   comingSoon?: boolean;
   roles: Role[];
 };
@@ -102,8 +104,26 @@ export const navSections: NavSection[] = [
         to: "/master-data/departments",
         roles: ["super_admin", "faculty"],
       },
+      {
+        label: "Student Enrollment",
+        icon: Users,
+        to: "/master-data/student-enrollment",
+        roles: ["super_admin", "faculty"],
+      },
     ],
   },
+  {
+    title: "Reports",
+    items: [
+      {
+        label: "Batch-wise Attainment",
+        icon: FileBarChart,
+        to: "/reports/attainment",
+        roles: ["super_admin", "faculty"],
+      },
+    ],
+  },
+
 
   {
     title: "Outcome Setup",
