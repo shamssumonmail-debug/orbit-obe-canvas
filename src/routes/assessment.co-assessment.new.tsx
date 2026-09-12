@@ -1,11 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Check, Eye, Save } from "lucide-react";
+import { BarChart3, Check, Eye, Save } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/obe/app-shell";
 import { RequireAuth } from "@/components/obe/require-auth";
+import { CoAttainmentReport } from "@/components/obe/co-assessment/co-attainment-chart";
 import { ScoreEntryTable } from "@/components/obe/co-assessment/score-entry-table";
+import { ScoreImport } from "@/components/obe/co-assessment/score-import";
 import { ScorePreviewDialog } from "@/components/obe/co-assessment/score-preview-dialog";
 import { StructureStep } from "@/components/obe/co-assessment/structure-step";
 import {
@@ -36,14 +38,24 @@ import {
   grandMaxScore,
   levelOptions,
   mockStudents,
-  sectionOptions,
   structureValid,
   type ScoreSection,
   type StudentRow,
 } from "@/lib/co-assessment";
+import {
+  getAssessment,
+  newAssessmentId,
+  saveAssessment,
+  type AssessmentRecord,
+} from "@/lib/co-assessment-store";
+import { useSemesterTypeOptions } from "@/lib/semester-types";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/assessment/co-assessment/new")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    id: typeof search["id"] === "string" ? (search["id"] as string) : undefined,
+    step: typeof search["step"] === "number" ? (search["step"] as number) : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "New CO Assessment · OBE Suite" },
@@ -68,21 +80,38 @@ const STEPS = ["Configuration", "Score Structure Setup", "Score Entry"] as const
 
 function NewCoAssessmentRoute() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(0);
-  const [batchLabel, setBatchLabel] = useState("");
-  const [levelLabel, setLevelLabel] = useState("");
-  const [courseLabel, setCourseLabel] = useState("");
-  const [sectionLabel, setSectionLabel] = useState("");
-  const [sections, setSections] = useState<ScoreSection[]>(defaultSections);
-  const [students, setStudents] = useState<StudentRow[]>(mockStudents);
+  const { id: editId, step: initialStep } = Route.useSearch();
+  const semesterOptions = useSemesterTypeOptions();
+  const existing = getAssessment(editId);
+
+  const [id] = useState(() => existing?.id ?? newAssessmentId());
+  const [step, setStep] = useState(initialStep ?? 0);
+  const [batchLabel, setBatchLabel] = useState(existing?.batchLabel ?? "");
+  const [levelLabel, setLevelLabel] = useState(existing?.levelLabel ?? "");
+  const [courseLabel, setCourseLabel] = useState(existing?.courseLabel ?? "");
+  const [semesterLabel, setSemesterLabel] = useState(existing?.semesterLabel ?? "");
+  const [sections, setSections] = useState<ScoreSection[]>(existing?.sections ?? defaultSections);
+  const [students, setStudents] = useState<StudentRow[]>(existing?.students ?? mockStudents);
   const [dirty, setDirty] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [completed, setCompleted] = useState(false);
+  const [completed, setCompleted] = useState(existing?.status === "Complete");
   const [draftAsk, setDraftAsk] = useState(false);
 
-  const step1Complete = Boolean(batchLabel && levelLabel && courseLabel && sectionLabel);
+  const step1Complete = Boolean(batchLabel && levelLabel && courseLabel && semesterLabel);
   const step2Complete = structureValid(sections);
   const total = grandMaxScore(sections);
+
+  const record = (status: AssessmentRecord["status"]): AssessmentRecord => ({
+    id,
+    batchLabel,
+    levelLabel,
+    courseLabel,
+    semesterLabel,
+    sections,
+    students,
+    status,
+    updatedAt: new Date().toISOString(),
+  });
 
   const handleScoreChange = (studentId: string, leafId: string, value: number) => {
     setDirty(true);
@@ -97,7 +126,10 @@ function NewCoAssessmentRoute() {
 
   return (
     <RequireAuth>
-      <AppShell title="New CO Assessment" subtitle="Configure structure, then score students live">
+      <AppShell
+        title={existing ? "CO Assessment" : "New CO Assessment"}
+        subtitle="Configure structure, then score students live"
+      >
         <div className="space-y-6">
           <ol className="flex flex-wrap items-center gap-3">
             {STEPS.map((label, index) => {
@@ -143,7 +175,12 @@ function NewCoAssessmentRoute() {
                   <Field label="Batch" value={batchLabel} onChange={setBatchLabel} options={batchOptions} />
                   <Field label="Level / Term" value={levelLabel} onChange={setLevelLabel} options={levelOptions} />
                   <Field label="Course" value={courseLabel} onChange={setCourseLabel} options={courseOptions} />
-                  <Field label="Section" value={sectionLabel} onChange={setSectionLabel} options={sectionOptions} />
+                  <Field
+                    label="Semester Type"
+                    value={semesterLabel}
+                    onChange={setSemesterLabel}
+                    options={semesterOptions}
+                  />
                 </CardContent>
               </Card>
             ) : null}
@@ -151,40 +188,68 @@ function NewCoAssessmentRoute() {
             {step === 1 ? <StructureStep sections={sections} onChange={setSections} /> : null}
 
             {step === 2 ? (
-              <Card>
-                <CardHeader className="flex-row items-start justify-between gap-4 space-y-0">
-                  <div>
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader className="flex-row items-start justify-between gap-4 space-y-0">
+                    <div>
+                      <CardTitle className="flex items-center gap-2">
+                        Score Entry
+                        {completed ? <Badge>Completed</Badge> : null}
+                      </CardTitle>
+                      <CardDescription>
+                        {batchLabel} · {levelLabel} · {courseLabel} · {semesterLabel}
+                      </CardDescription>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <ScoreImport
+                        sections={sections}
+                        students={students}
+                        fileBase={`co-assessment-${(courseLabel.split(" ")[0] || "scores").toLowerCase()}`}
+                        onImport={(next) => {
+                          setStudents(next);
+                          setDirty(true);
+                        }}
+                      />
+                      <Button variant="outline" size="sm" onClick={() => setPreviewOpen(true)}>
+                        <Eye className="mr-1 h-4 w-4" /> Preview
+                      </Button>
+                      <Button
+                        size="sm"
+                        disabled={!dirty}
+                        onClick={() => {
+                          setDirty(false);
+                          saveAssessment(record(completed ? "Complete" : "Scoring In Progress"));
+                          toast.success("Scores saved");
+                        }}
+                      >
+                        <Save className="mr-1 h-4 w-4" /> Save
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <ScoreEntryTable
+                      sections={sections}
+                      students={students}
+                      onScoreChange={handleScoreChange}
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      Score Entry
-                      {completed ? <Badge>Completed</Badge> : null}
+                      <BarChart3 className="h-4 w-4" /> CO Attainment Report
                     </CardTitle>
                     <CardDescription>
-                      {batchLabel} · {levelLabel} · {courseLabel} · {sectionLabel}
+                      Live attainment per course outcome for {courseLabel || "this course"} — updates
+                      as you enter marks.
                     </CardDescription>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Button variant="outline" onClick={() => setPreviewOpen(true)}>
-                      <Eye className="mr-1 h-4 w-4" /> Preview
-                    </Button>
-                    <Button
-                      disabled={!dirty}
-                      onClick={() => {
-                        setDirty(false);
-                        toast.success("Scores saved for this session");
-                      }}
-                    >
-                      <Save className="mr-1 h-4 w-4" /> Save
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ScoreEntryTable
-                    sections={sections}
-                    students={students}
-                    onScoreChange={handleScoreChange}
-                  />
-                </CardContent>
-              </Card>
+                  </CardHeader>
+                  <CardContent>
+                    <CoAttainmentReport sections={sections} students={students} />
+                  </CardContent>
+                </Card>
+              </div>
             ) : null}
           </div>
 
@@ -207,7 +272,14 @@ function NewCoAssessmentRoute() {
                 <Button variant="ghost" onClick={() => setDraftAsk(true)}>
                   Cancel
                 </Button>
-                <Button disabled={!step2Complete} onClick={() => setStep(2)}>
+                <Button
+                  disabled={!step2Complete}
+                  onClick={() => {
+                    saveAssessment(record("Structure Configured"));
+                    toast.success("Structure saved");
+                    setStep(2);
+                  }}
+                >
                   Save &amp; Create
                 </Button>
               </div>
@@ -222,7 +294,11 @@ function NewCoAssessmentRoute() {
                   Next
                 </Button>
               </div>
-            ) : null}
+            ) : (
+              <Button variant="secondary" onClick={leaveWizard}>
+                Back to list
+              </Button>
+            )}
           </div>
         </div>
 
@@ -231,10 +307,12 @@ function NewCoAssessmentRoute() {
           onOpenChange={setPreviewOpen}
           sections={sections}
           students={students}
-          meta={{ batchLabel, levelLabel, courseLabel, sectionLabel }}
+          meta={{ batchLabel, levelLabel, courseLabel, sectionLabel: semesterLabel }}
           completed={completed}
           onMarkCompleted={() => {
             setCompleted(true);
+            setDirty(false);
+            saveAssessment(record("Complete"));
             toast.success("Assessment marked as completed");
           }}
         />
@@ -244,14 +322,14 @@ function NewCoAssessmentRoute() {
             <AlertDialogHeader>
               <AlertDialogTitle>Keep this as a draft?</AlertDialogTitle>
               <AlertDialogDescription>
-                The structure is not complete yet. Save it as a draft so it shows in your CO
-                Assessment list, or discard it.
+                Save it as a draft so it shows in your CO Assessment list, or discard it.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={leaveWizard}>Discard</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
+                  saveAssessment(record("Draft"));
                   toast.success("Saved as draft");
                   leaveWizard();
                 }}
@@ -275,7 +353,7 @@ function Field({
   label: string;
   value: string;
   onChange: (value: string) => void;
-  options: string[];
+  options: readonly string[];
 }) {
   return (
     <div className="space-y-2">

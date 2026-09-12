@@ -15,7 +15,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -32,65 +31,55 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { type AssessmentStatus } from "@/lib/co-assessment";
-import { deleteAssessment, useAssessments } from "@/lib/co-assessment-store";
+import { deleteBatch, useEnrollmentBatches } from "@/lib/enrollment-store";
 
-export const Route = createFileRoute("/assessment/co-assessment/")({
+export const Route = createFileRoute("/master-data/student-enrollment/")({
   head: () => ({
     meta: [
-      { title: "CO Assessment · OBE Suite" },
+      { title: "Student Enrollment · OBE Suite master data" },
       {
         name: "description",
         content:
-          "Configure custom scoring structures and enter per-student CO assessment scores with live totals.",
+          "Enroll students batch by batch: add them manually or upload a CSV / Excel list per department.",
       },
-      { property: "og:title", content: "CO Assessment · OBE Suite" },
+      { property: "og:title", content: "Student Enrollment · OBE Suite master data" },
       {
         property: "og:description",
-        content: "Custom score structures and live CO achievement calculation for faculty.",
+        content: "Department and batch wise student lists used for CO assessment score entry.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: CoAssessmentListRoute,
+  component: StudentEnrollmentRoute,
 });
 
-const statusVariant: Record<AssessmentStatus, "default" | "secondary" | "outline"> = {
-  Complete: "default",
-  "Scoring In Progress": "secondary",
-  "Structure Configured": "outline",
-  Draft: "outline",
-};
-
-function CoAssessmentListRoute() {
+function StudentEnrollmentRoute() {
   const navigate = useNavigate();
-  const assessments = useAssessments();
+  const batches = useEnrollmentBatches();
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
   return (
     <RequireAuth>
-      <AppShell title="CO Assessment" subtitle="Custom score structures and live achievement calculation">
+      <AppShell title="Student Enrollment" subtitle="Department and batch wise student lists">
         <Card>
           <CardHeader className="flex-row items-start justify-between gap-4 space-y-0">
             <div>
-              <CardTitle>CO Assessments</CardTitle>
-              <CardDescription>
-                Everything you save or create shows up here, kept on this device.
-              </CardDescription>
+              <CardTitle>Enrolled Batches</CardTitle>
+              <CardDescription>Each batch name is unique across the institution.</CardDescription>
             </div>
             <Button asChild>
-              <Link to="/assessment/co-assessment/new" search={{ id: undefined, step: undefined }}>
-                <Plus className="mr-1 h-4 w-4" /> Add CO Assessment
+              <Link to="/master-data/student-enrollment/$id" params={{ id: "new" }} search={{ view: undefined }}>
+                <Plus className="mr-1 h-4 w-4" /> Add Batch
               </Link>
             </Button>
           </CardHeader>
           <CardContent>
-            {assessments.length === 0 ? (
+            {batches.length === 0 ? (
               <div className="rounded-lg border border-dashed p-10 text-center">
-                <p className="text-sm font-medium">No CO assessments yet</p>
+                <p className="text-sm font-medium">No batches enrolled yet</p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Use “Add CO Assessment” to configure your first score structure.
+                  Use “Add Batch” to create your first student list.
                 </p>
               </div>
             ) : (
@@ -98,26 +87,24 @@ function CoAssessmentListRoute() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Batch</TableHead>
-                    <TableHead>Level</TableHead>
-                    <TableHead>Course</TableHead>
+                    <TableHead>Department</TableHead>
+                    <TableHead>Programme</TableHead>
                     <TableHead>Semester</TableHead>
-                    <TableHead className="text-right">Sections</TableHead>
                     <TableHead className="text-right">Students</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Active</TableHead>
                     <TableHead className="w-10" />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {assessments.map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell className="font-medium">{row.batchLabel}</TableCell>
-                      <TableCell>{row.levelLabel}</TableCell>
-                      <TableCell>{row.courseLabel}</TableCell>
-                      <TableCell>{row.semesterLabel}</TableCell>
-                      <TableCell className="text-right tabular-nums">{row.sections.length}</TableCell>
-                      <TableCell className="text-right tabular-nums">{row.students.length}</TableCell>
-                      <TableCell>
-                        <Badge variant={statusVariant[row.status]}>{row.status}</Badge>
+                  {batches.map((batch) => (
+                    <TableRow key={batch.id}>
+                      <TableCell className="font-medium">{batch.batchName}</TableCell>
+                      <TableCell>{batch.departmentLabel}</TableCell>
+                      <TableCell>{batch.programme || "—"}</TableCell>
+                      <TableCell>{batch.semesterLabel || "—"}</TableCell>
+                      <TableCell className="text-right tabular-nums">{batch.students.length}</TableCell>
+                      <TableCell className="text-right tabular-nums">
+                        {batch.students.filter((s) => s.active).length}
                       </TableCell>
                       <TableCell>
                         <DropdownMenu>
@@ -130,18 +117,20 @@ function CoAssessmentListRoute() {
                             <DropdownMenuItem
                               onClick={() =>
                                 navigate({
-                                  to: "/assessment/co-assessment/new",
-                                  search: { id: row.id, step: 2 },
+                                  to: "/master-data/student-enrollment/$id",
+                                  params: { id: batch.id },
+                                  search: { view: true },
                                 })
                               }
                             >
-                              <Eye className="mr-2 h-4 w-4" /> Preview scores
+                              <Eye className="mr-2 h-4 w-4" /> View
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() =>
                                 navigate({
-                                  to: "/assessment/co-assessment/new",
-                                  search: { id: row.id, step: 0 },
+                                  to: "/master-data/student-enrollment/$id",
+                                  params: { id: batch.id },
+                                  search: { view: undefined },
                                 })
                               }
                             >
@@ -149,7 +138,7 @@ function CoAssessmentListRoute() {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               className="text-destructive focus:text-destructive"
-                              onClick={() => setPendingDelete(row.id)}
+                              onClick={() => setPendingDelete(batch.id)}
                             >
                               <Trash2 className="mr-2 h-4 w-4" /> Delete
                             </DropdownMenuItem>
@@ -164,21 +153,24 @@ function CoAssessmentListRoute() {
           </CardContent>
         </Card>
 
-        <AlertDialog open={pendingDelete !== null} onOpenChange={(open) => !open && setPendingDelete(null)}>
+        <AlertDialog
+          open={pendingDelete !== null}
+          onOpenChange={(open) => !open && setPendingDelete(null)}
+        >
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete this CO assessment?</AlertDialogTitle>
+              <AlertDialogTitle>Delete this batch?</AlertDialogTitle>
               <AlertDialogDescription>
-                The structure and all entered scores for it will be removed.
+                The batch and its student list will be removed.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Keep it</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
-                  if (pendingDelete) deleteAssessment(pendingDelete);
+                  if (pendingDelete) deleteBatch(pendingDelete);
                   setPendingDelete(null);
-                  toast.success("CO assessment deleted");
+                  toast.success("Batch deleted");
                 }}
               >
                 Delete

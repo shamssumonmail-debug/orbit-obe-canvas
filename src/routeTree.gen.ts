@@ -20,12 +20,15 @@ import { Route as MasterDataDepartmentsRouteImport } from './routes/master-data.
 import { Route as MasterDataKnowledgeProfilesRouteImport } from './routes/master-data.knowledge-profiles'
 import { Route as MasterDataProgramOutcomesRouteImport } from './routes/master-data.program-outcomes'
 import { Route as MasterDataSemesterTypesRouteImport } from './routes/master-data.semester-types'
+import { Route as ReportsAttainmentRouteImport } from './routes/reports.attainment'
 import { Route as SettingsFacultyRouteImport } from './routes/settings.faculty'
 import { Route as SettingsInstitutionRouteImport } from './routes/settings.institution'
 import { Route as SettingsProfileRouteImport } from './routes/settings.profile'
 import { Route as AssessmentCoAssessmentIndexRouteImport } from './routes/assessment.co-assessment.index'
 import { Route as AssessmentCoAssessmentNewRouteImport } from './routes/assessment.co-assessment.new'
 import { Route as CourseSetupReportIdRouteImport } from './routes/course-setup.report.$id'
+import { Route as MasterDataStudentEnrollmentIndexRouteImport } from './routes/master-data.student-enrollment.index'
+import { Route as MasterDataStudentEnrollmentIdRouteImport } from './routes/master-data.student-enrollment.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -87,6 +90,11 @@ const MasterDataSemesterTypesRoute = MasterDataSemesterTypesRouteImport.update({
   path: '/master-data/semester-types',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReportsAttainmentRoute = ReportsAttainmentRouteImport.update({
+  id: '/reports/attainment',
+  path: '/reports/attainment',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsFacultyRoute = SettingsFacultyRouteImport.update({
   id: '/settings/faculty',
   path: '/settings/faculty',
@@ -119,6 +127,18 @@ const CourseSetupReportIdRoute = CourseSetupReportIdRouteImport.update({
   path: '/course-setup/report/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MasterDataStudentEnrollmentIndexRoute =
+  MasterDataStudentEnrollmentIndexRouteImport.update({
+    id: '/master-data/student-enrollment/',
+    path: '/master-data/student-enrollment/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MasterDataStudentEnrollmentIdRoute =
+  MasterDataStudentEnrollmentIdRouteImport.update({
+    id: '/master-data/student-enrollment/$id',
+    path: '/master-data/student-enrollment/$id',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -131,13 +151,16 @@ export interface FileRoutesByFullPath {
   '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
+  '/reports/attainment': typeof ReportsAttainmentRoute
   '/settings/faculty': typeof SettingsFacultyRoute
   '/settings/institution': typeof SettingsInstitutionRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/course-setup/': typeof CourseSetupIndexRoute
   '/assessment/co-assessment/new': typeof AssessmentCoAssessmentNewRoute
   '/course-setup/report/$id': typeof CourseSetupReportIdRoute
+  '/master-data/student-enrollment/$id': typeof MasterDataStudentEnrollmentIdRoute
   '/assessment/co-assessment/': typeof AssessmentCoAssessmentIndexRoute
+  '/master-data/student-enrollment/': typeof MasterDataStudentEnrollmentIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -150,13 +173,16 @@ export interface FileRoutesByTo {
   '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
+  '/reports/attainment': typeof ReportsAttainmentRoute
   '/settings/faculty': typeof SettingsFacultyRoute
   '/settings/institution': typeof SettingsInstitutionRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/course-setup': typeof CourseSetupIndexRoute
   '/assessment/co-assessment/new': typeof AssessmentCoAssessmentNewRoute
   '/course-setup/report/$id': typeof CourseSetupReportIdRoute
+  '/master-data/student-enrollment/$id': typeof MasterDataStudentEnrollmentIdRoute
   '/assessment/co-assessment': typeof AssessmentCoAssessmentIndexRoute
+  '/master-data/student-enrollment': typeof MasterDataStudentEnrollmentIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -170,13 +196,16 @@ export interface FileRoutesById {
   '/master-data/knowledge-profiles': typeof MasterDataKnowledgeProfilesRoute
   '/master-data/program-outcomes': typeof MasterDataProgramOutcomesRoute
   '/master-data/semester-types': typeof MasterDataSemesterTypesRoute
+  '/reports/attainment': typeof ReportsAttainmentRoute
   '/settings/faculty': typeof SettingsFacultyRoute
   '/settings/institution': typeof SettingsInstitutionRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/course-setup/': typeof CourseSetupIndexRoute
   '/assessment/co-assessment/new': typeof AssessmentCoAssessmentNewRoute
   '/course-setup/report/$id': typeof CourseSetupReportIdRoute
+  '/master-data/student-enrollment/$id': typeof MasterDataStudentEnrollmentIdRoute
   '/assessment/co-assessment/': typeof AssessmentCoAssessmentIndexRoute
+  '/master-data/student-enrollment/': typeof MasterDataStudentEnrollmentIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -191,13 +220,16 @@ export interface FileRouteTypes {
     | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
     | '/master-data/semester-types'
+    | '/reports/attainment'
     | '/settings/faculty'
     | '/settings/institution'
     | '/settings/profile'
     | '/course-setup/'
     | '/assessment/co-assessment/new'
     | '/course-setup/report/$id'
+    | '/master-data/student-enrollment/$id'
     | '/assessment/co-assessment/'
+    | '/master-data/student-enrollment/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -210,13 +242,16 @@ export interface FileRouteTypes {
     | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
     | '/master-data/semester-types'
+    | '/reports/attainment'
     | '/settings/faculty'
     | '/settings/institution'
     | '/settings/profile'
     | '/course-setup'
     | '/assessment/co-assessment/new'
     | '/course-setup/report/$id'
+    | '/master-data/student-enrollment/$id'
     | '/assessment/co-assessment'
+    | '/master-data/student-enrollment'
   id:
     | '__root__'
     | '/'
@@ -229,13 +264,16 @@ export interface FileRouteTypes {
     | '/master-data/knowledge-profiles'
     | '/master-data/program-outcomes'
     | '/master-data/semester-types'
+    | '/reports/attainment'
     | '/settings/faculty'
     | '/settings/institution'
     | '/settings/profile'
     | '/course-setup/'
     | '/assessment/co-assessment/new'
     | '/course-setup/report/$id'
+    | '/master-data/student-enrollment/$id'
     | '/assessment/co-assessment/'
+    | '/master-data/student-enrollment/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -249,13 +287,16 @@ export interface RootRouteChildren {
   MasterDataKnowledgeProfilesRoute: typeof MasterDataKnowledgeProfilesRoute
   MasterDataProgramOutcomesRoute: typeof MasterDataProgramOutcomesRoute
   MasterDataSemesterTypesRoute: typeof MasterDataSemesterTypesRoute
+  ReportsAttainmentRoute: typeof ReportsAttainmentRoute
   SettingsFacultyRoute: typeof SettingsFacultyRoute
   SettingsInstitutionRoute: typeof SettingsInstitutionRoute
   SettingsProfileRoute: typeof SettingsProfileRoute
   CourseSetupIndexRoute: typeof CourseSetupIndexRoute
   AssessmentCoAssessmentNewRoute: typeof AssessmentCoAssessmentNewRoute
   CourseSetupReportIdRoute: typeof CourseSetupReportIdRoute
+  MasterDataStudentEnrollmentIdRoute: typeof MasterDataStudentEnrollmentIdRoute
   AssessmentCoAssessmentIndexRoute: typeof AssessmentCoAssessmentIndexRoute
+  MasterDataStudentEnrollmentIndexRoute: typeof MasterDataStudentEnrollmentIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -337,6 +378,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MasterDataSemesterTypesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reports/attainment': {
+      id: '/reports/attainment'
+      path: '/reports/attainment'
+      fullPath: '/reports/attainment'
+      preLoaderRoute: typeof ReportsAttainmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings/faculty': {
       id: '/settings/faculty'
       path: '/settings/faculty'
@@ -379,6 +427,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CourseSetupReportIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/master-data/student-enrollment/': {
+      id: '/master-data/student-enrollment/'
+      path: '/master-data/student-enrollment'
+      fullPath: '/master-data/student-enrollment/'
+      preLoaderRoute: typeof MasterDataStudentEnrollmentIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/master-data/student-enrollment/$id': {
+      id: '/master-data/student-enrollment/$id'
+      path: '/master-data/student-enrollment/$id'
+      fullPath: '/master-data/student-enrollment/$id'
+      preLoaderRoute: typeof MasterDataStudentEnrollmentIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -394,13 +456,16 @@ const rootRouteChildren: RootRouteChildren = {
   MasterDataKnowledgeProfilesRoute: MasterDataKnowledgeProfilesRoute,
   MasterDataProgramOutcomesRoute: MasterDataProgramOutcomesRoute,
   MasterDataSemesterTypesRoute: MasterDataSemesterTypesRoute,
+  ReportsAttainmentRoute: ReportsAttainmentRoute,
   SettingsFacultyRoute: SettingsFacultyRoute,
   SettingsInstitutionRoute: SettingsInstitutionRoute,
   SettingsProfileRoute: SettingsProfileRoute,
   CourseSetupIndexRoute: CourseSetupIndexRoute,
   AssessmentCoAssessmentNewRoute: AssessmentCoAssessmentNewRoute,
   CourseSetupReportIdRoute: CourseSetupReportIdRoute,
+  MasterDataStudentEnrollmentIdRoute: MasterDataStudentEnrollmentIdRoute,
   AssessmentCoAssessmentIndexRoute: AssessmentCoAssessmentIndexRoute,
+  MasterDataStudentEnrollmentIndexRoute: MasterDataStudentEnrollmentIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
