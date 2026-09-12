@@ -80,7 +80,7 @@ function CoAssessmentListRoute() {
               </CardDescription>
             </div>
             <Button asChild>
-              <Link to="/assessment/co-assessment/new">
+              <Link to="/assessment/co-assessment/new" search={{ id: undefined, step: undefined }}>
                 <Plus className="mr-1 h-4 w-4" /> Add CO Assessment
               </Link>
             </Button>
