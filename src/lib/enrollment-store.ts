@@ -74,7 +74,7 @@ export function parseStudentCsv(text: string): EnrolledStudent[] {
   );
   return body
     .filter((cells) => cells.length >= 2 && cells[0] && cells[1])
-    .map((cells) => ({ studentId: cells[0], studentName: cells[1], active: true }));
+    .map((cells) => ({ studentId: cells[0] ?? "", studentName: cells[1] ?? "", active: true }));
 }
 
 export function downloadCsv(filename: string, csv: string) {

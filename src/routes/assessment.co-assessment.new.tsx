@@ -53,8 +53,8 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/assessment/co-assessment/new")({
   validateSearch: (search: Record<string, unknown>) => ({
-    id: typeof search.id === "string" ? search.id : undefined,
-    step: typeof search.step === "number" ? search.step : undefined,
+    id: typeof search["id"] === "string" ? (search["id"] as string) : undefined,
+    step: typeof search["step"] === "number" ? (search["step"] as number) : undefined,
   }),
   head: () => ({
     meta: [

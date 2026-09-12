@@ -47,7 +47,7 @@ import { useSemesterTypeOptions } from "@/lib/semester-types";
 
 export const Route = createFileRoute("/master-data/student-enrollment/$id")({
   validateSearch: (search: Record<string, unknown>) => ({
-    view: search.view === true || search.view === "true" ? true : undefined,
+    view: search["view"] === true || search["view"] === "true" ? true : undefined,
   }),
   head: () => ({
     meta: [

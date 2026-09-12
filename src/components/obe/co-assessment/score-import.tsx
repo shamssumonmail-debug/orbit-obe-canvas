@@ -79,7 +79,7 @@ export function ScoreImport({
     try {
       const buffer = await file.arrayBuffer();
       const book = XLSX.read(buffer, { type: "array" });
-      const sheet = book.Sheets[book.SheetNames[0]];
+      const sheet = book.Sheets[book.SheetNames[0] ?? ""];
       if (!sheet) throw new Error("empty file");
       const rows = XLSX.utils.sheet_to_json<(string | number)[]>(sheet, { header: 1, blankrows: false });
       const headerIndex = rows.findIndex((row) =>
@@ -87,7 +87,7 @@ export function ScoreImport({
       );
       if (headerIndex === -1) throw new Error("no 'Student ID' column found");
 
-      const header = rows[headerIndex].map((cell) => normalize(String(cell ?? "")));
+      const header = (rows[headerIndex] ?? []).map((cell) => normalize(String(cell ?? "")));
       const columns = scoreColumns(sections);
       const columnIndex = new Map<string, number>();
       columns.forEach((column) => {

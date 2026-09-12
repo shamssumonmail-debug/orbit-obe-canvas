@@ -35,7 +35,7 @@ export function useAttainmentBands(): AttainmentBand[] {
 
 export function bandFor(bands: AttainmentBand[], percent: number): AttainmentBand {
   const found = bands.find((b) => percent >= Number(b.min_score) && percent <= Number(b.max_score));
-  return found ?? bands[bands.length - 1] ?? fallbackBands[0];
+  return found ?? bands[bands.length - 1] ?? (fallbackBands[0] as AttainmentBand);
 }
 
 /** Colour per scale value — low levels red/amber, high levels green. */
