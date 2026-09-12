@@ -28,6 +28,7 @@ import { Route as AssessmentCoAssessmentIndexRouteImport } from './routes/assess
 import { Route as AssessmentCoAssessmentNewRouteImport } from './routes/assessment.co-assessment.new'
 import { Route as CourseSetupReportIdRouteImport } from './routes/course-setup.report.$id'
 import { Route as MasterDataStudentEnrollmentIndexRouteImport } from './routes/master-data.student-enrollment.index'
+import { Route as MasterDataStudentEnrollmentIdRouteImport } from './routes/master-data.student-enrollment.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -132,6 +133,12 @@ const MasterDataStudentEnrollmentIndexRoute =
     path: '/master-data/student-enrollment/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const MasterDataStudentEnrollmentIdRoute =
+  MasterDataStudentEnrollmentIdRouteImport.update({
+    id: '/master-data/student-enrollment/$id',
+    path: '/master-data/student-enrollment/$id',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -151,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/course-setup/': typeof CourseSetupIndexRoute
   '/assessment/co-assessment/new': typeof AssessmentCoAssessmentNewRoute
   '/course-setup/report/$id': typeof CourseSetupReportIdRoute
+  '/master-data/student-enrollment/$id': typeof MasterDataStudentEnrollmentIdRoute
   '/assessment/co-assessment/': typeof AssessmentCoAssessmentIndexRoute
   '/master-data/student-enrollment/': typeof MasterDataStudentEnrollmentIndexRoute
 }
@@ -172,6 +180,7 @@ export interface FileRoutesByTo {
   '/course-setup': typeof CourseSetupIndexRoute
   '/assessment/co-assessment/new': typeof AssessmentCoAssessmentNewRoute
   '/course-setup/report/$id': typeof CourseSetupReportIdRoute
+  '/master-data/student-enrollment/$id': typeof MasterDataStudentEnrollmentIdRoute
   '/assessment/co-assessment': typeof AssessmentCoAssessmentIndexRoute
   '/master-data/student-enrollment': typeof MasterDataStudentEnrollmentIndexRoute
 }
@@ -194,6 +203,7 @@ export interface FileRoutesById {
   '/course-setup/': typeof CourseSetupIndexRoute
   '/assessment/co-assessment/new': typeof AssessmentCoAssessmentNewRoute
   '/course-setup/report/$id': typeof CourseSetupReportIdRoute
+  '/master-data/student-enrollment/$id': typeof MasterDataStudentEnrollmentIdRoute
   '/assessment/co-assessment/': typeof AssessmentCoAssessmentIndexRoute
   '/master-data/student-enrollment/': typeof MasterDataStudentEnrollmentIndexRoute
 }
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/course-setup/'
     | '/assessment/co-assessment/new'
     | '/course-setup/report/$id'
+    | '/master-data/student-enrollment/$id'
     | '/assessment/co-assessment/'
     | '/master-data/student-enrollment/'
   fileRoutesByTo: FileRoutesByTo
@@ -238,6 +249,7 @@ export interface FileRouteTypes {
     | '/course-setup'
     | '/assessment/co-assessment/new'
     | '/course-setup/report/$id'
+    | '/master-data/student-enrollment/$id'
     | '/assessment/co-assessment'
     | '/master-data/student-enrollment'
   id:
@@ -259,6 +271,7 @@ export interface FileRouteTypes {
     | '/course-setup/'
     | '/assessment/co-assessment/new'
     | '/course-setup/report/$id'
+    | '/master-data/student-enrollment/$id'
     | '/assessment/co-assessment/'
     | '/master-data/student-enrollment/'
   fileRoutesById: FileRoutesById
@@ -281,6 +294,7 @@ export interface RootRouteChildren {
   CourseSetupIndexRoute: typeof CourseSetupIndexRoute
   AssessmentCoAssessmentNewRoute: typeof AssessmentCoAssessmentNewRoute
   CourseSetupReportIdRoute: typeof CourseSetupReportIdRoute
+  MasterDataStudentEnrollmentIdRoute: typeof MasterDataStudentEnrollmentIdRoute
   AssessmentCoAssessmentIndexRoute: typeof AssessmentCoAssessmentIndexRoute
   MasterDataStudentEnrollmentIndexRoute: typeof MasterDataStudentEnrollmentIndexRoute
 }
@@ -420,6 +434,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MasterDataStudentEnrollmentIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/master-data/student-enrollment/$id': {
+      id: '/master-data/student-enrollment/$id'
+      path: '/master-data/student-enrollment/$id'
+      fullPath: '/master-data/student-enrollment/$id'
+      preLoaderRoute: typeof MasterDataStudentEnrollmentIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -442,6 +463,7 @@ const rootRouteChildren: RootRouteChildren = {
   CourseSetupIndexRoute: CourseSetupIndexRoute,
   AssessmentCoAssessmentNewRoute: AssessmentCoAssessmentNewRoute,
   CourseSetupReportIdRoute: CourseSetupReportIdRoute,
+  MasterDataStudentEnrollmentIdRoute: MasterDataStudentEnrollmentIdRoute,
   AssessmentCoAssessmentIndexRoute: AssessmentCoAssessmentIndexRoute,
   MasterDataStudentEnrollmentIndexRoute: MasterDataStudentEnrollmentIndexRoute,
 }
