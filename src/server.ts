@@ -1,4 +1,4 @@
-import "./lib/error-capture";
+import "@/utils/error-capture";
 
 import { consumeLastCapturedError } from "@/utils/error-capture";
 import { renderErrorPage } from "@/utils/error-page";
