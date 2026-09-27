@@ -2,9 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Bar, BarChart, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-import { AppShell } from "@/components/obe/app-shell";
-import { RequireAuth } from "@/components/obe/require-auth";
-import { CoAttainmentReport } from "@/components/obe/co-assessment/co-attainment-chart";
+import { AppShell } from "@/layouts/app-shell";
+import { RequireAuth } from "@/features/auth/components/require-auth";
+import { CoAttainmentReport } from "@/features/co-assessment/components/co-attainment-chart";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -21,8 +21,8 @@ import {
   computeCoAttainment,
   computePoAttainment,
   useAttainmentBands,
-} from "@/lib/co-attainment";
-import { useAssessments } from "@/lib/co-assessment-store";
+} from "@/features/reports/services/co-attainment";
+import { useAssessments } from "@/store/co-assessment-store";
 
 export const Route = createFileRoute("/reports/attainment")({
   head: () => ({

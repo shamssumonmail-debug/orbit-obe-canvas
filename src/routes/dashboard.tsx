@@ -20,11 +20,11 @@ import {
 } from "recharts";
 import { toast } from "sonner";
 
-import { AppShell } from "@/components/obe/app-shell";
-import { RequireAuth } from "@/components/obe/require-auth";
+import { AppShell } from "@/layouts/app-shell";
+import { RequireAuth } from "@/features/auth/components/require-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/lib/mock-auth";
+import { useAuth } from "@/context/auth-context";
 import {
   attainmentByPo,
   attainmentTrend,
@@ -33,7 +33,7 @@ import {
   obeCounters,
   pendingMapping,
   setupRings,
-} from "@/lib/obe-mock-data";
+} from "@/features/dashboard/services/obe-mock-data";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({

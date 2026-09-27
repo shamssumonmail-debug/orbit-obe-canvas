@@ -8,8 +8,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAuth } from "@/lib/mock-auth";
-import { useInstitution, useLogoUrl } from "@/lib/institution";
+import { useAuth } from "@/context/auth-context";
+import { useInstitution, useLogoUrl } from "@/features/institution/services/institution";
 
 export const Route = createFileRoute("/")({
   head: () => ({

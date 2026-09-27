@@ -4,15 +4,15 @@ import { Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { AppShell } from "@/components/obe/app-shell";
-import { RequireAuth } from "@/components/obe/require-auth";
+import { AppShell } from "@/layouts/app-shell";
+import { RequireAuth } from "@/features/auth/components/require-auth";
 import {
   BasicInfoForm,
   basicInfoPayload,
   emptyBasicInfo,
   validateBasicInfo,
   type BasicInfoValue,
-} from "@/components/obe/course-setup/basic-info-form";
+} from "@/features/course-setup/components/basic-info-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,7 +42,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/mock-auth";
+import { useAuth } from "@/context/auth-context";
 import {
   STATUS_LABEL,
   isCoordinator,
@@ -52,7 +52,7 @@ import {
   useReferenceData,
   type CourseOffering,
   type OfferingStatus,
-} from "@/lib/course-setup";
+} from "@/features/course-setup/services/course-setup";
 
 export const Route = createFileRoute("/course-setup/")({
   head: () => ({

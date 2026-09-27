@@ -5,8 +5,8 @@ import { Pencil, Plus, UserPlus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { AppShell } from "@/components/obe/app-shell";
-import { RequireAuth } from "@/components/obe/require-auth";
+import { AppShell } from "@/layouts/app-shell";
+import { RequireAuth } from "@/features/auth/components/require-auth";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,8 +35,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
-import { createFacultyMember } from "@/lib/faculty.functions";
-import { useReferenceData, type Profile } from "@/lib/course-setup";
+import { createFacultyMember } from "@/features/faculty/services/faculty.functions";
+import { useReferenceData, type Profile } from "@/features/course-setup/services/course-setup";
 
 export const Route = createFileRoute("/settings/faculty")({
   head: () => ({

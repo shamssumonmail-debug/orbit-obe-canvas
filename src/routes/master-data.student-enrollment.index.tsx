@@ -3,8 +3,8 @@ import { Eye, MoreVertical, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { AppShell } from "@/components/obe/app-shell";
-import { RequireAuth } from "@/components/obe/require-auth";
+import { AppShell } from "@/layouts/app-shell";
+import { RequireAuth } from "@/features/auth/components/require-auth";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,7 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { deleteBatch, useEnrollmentBatches } from "@/lib/enrollment-store";
+import { deleteBatch, useEnrollmentBatches } from "@/store/enrollment-store";
 
 export const Route = createFileRoute("/master-data/student-enrollment/")({
   head: () => ({

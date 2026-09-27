@@ -3,8 +3,8 @@ import { Eye, MoreVertical, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { AppShell } from "@/components/obe/app-shell";
-import { RequireAuth } from "@/components/obe/require-auth";
+import { AppShell } from "@/layouts/app-shell";
+import { RequireAuth } from "@/features/auth/components/require-auth";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,8 +32,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { type AssessmentStatus } from "@/lib/co-assessment";
-import { deleteAssessment, useAssessments } from "@/lib/co-assessment-store";
+import { type AssessmentStatus } from "@/features/co-assessment/services/co-assessment";
+import { deleteAssessment, useAssessments } from "@/store/co-assessment-store";
 
 export const Route = createFileRoute("/assessment/co-assessment/")({
   head: () => ({

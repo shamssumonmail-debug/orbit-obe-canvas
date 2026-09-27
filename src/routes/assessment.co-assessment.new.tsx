@@ -3,13 +3,13 @@ import { BarChart3, Check, Eye, Save } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { AppShell } from "@/components/obe/app-shell";
-import { RequireAuth } from "@/components/obe/require-auth";
-import { CoAttainmentReport } from "@/components/obe/co-assessment/co-attainment-chart";
-import { ScoreEntryTable } from "@/components/obe/co-assessment/score-entry-table";
-import { ScoreImport } from "@/components/obe/co-assessment/score-import";
-import { ScorePreviewDialog } from "@/components/obe/co-assessment/score-preview-dialog";
-import { StructureStep } from "@/components/obe/co-assessment/structure-step";
+import { AppShell } from "@/layouts/app-shell";
+import { RequireAuth } from "@/features/auth/components/require-auth";
+import { CoAttainmentReport } from "@/features/co-assessment/components/co-attainment-chart";
+import { ScoreEntryTable } from "@/features/co-assessment/components/score-entry-table";
+import { ScoreImport } from "@/features/co-assessment/components/score-import";
+import { ScorePreviewDialog } from "@/features/co-assessment/components/score-preview-dialog";
+import { StructureStep } from "@/features/co-assessment/components/structure-step";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,15 +41,15 @@ import {
   structureValid,
   type ScoreSection,
   type StudentRow,
-} from "@/lib/co-assessment";
+} from "@/features/co-assessment/services/co-assessment";
 import {
   getAssessment,
   newAssessmentId,
   saveAssessment,
   type AssessmentRecord,
-} from "@/lib/co-assessment-store";
-import { useSemesterTypeOptions } from "@/lib/semester-types";
-import { cn } from "@/lib/utils";
+} from "@/store/co-assessment-store";
+import { useSemesterTypeOptions } from "@/features/master-data/services/semester-types";
+import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/assessment/co-assessment/new")({
   validateSearch: (search: Record<string, unknown>) => ({

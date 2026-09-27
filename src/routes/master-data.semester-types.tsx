@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { AppShell } from "@/components/obe/app-shell";
-import { RequireAuth } from "@/components/obe/require-auth";
-import { MasterDataTable } from "@/components/obe/master-data-table";
-import { semesterTypesResource } from "@/lib/master-data";
+import { AppShell } from "@/layouts/app-shell";
+import { RequireAuth } from "@/features/auth/components/require-auth";
+import { MasterDataTable } from "@/features/master-data/components/master-data-table";
+import { semesterTypesResource } from "@/features/master-data/services/master-data";
 
 export const Route = createFileRoute("/master-data/semester-types")({
   head: () => ({
