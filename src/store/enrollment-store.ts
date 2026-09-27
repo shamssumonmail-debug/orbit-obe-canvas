@@ -1,28 +1,21 @@
-// Student enrollment — browser-only store (mock data, no backend writes).
-import { createLocalStore, useLocalStore } from "@/store/local-store";
+// Student enrollment state helpers backed by the Redux store.
+import { useEffect } from "react";
+import { useHydrated } from "@tanstack/react-router";
+
 import { uid } from "@/features/co-assessment/services/co-assessment";
+import { ensureHydrated, store, useAppSelector } from "./index";
+import { removeBatch, upsertBatch, type EnrollmentBatch } from "./slices/enrollment-slice";
 
-export type EnrolledStudent = {
-  studentId: string;
-  studentName: string;
-  active: boolean;
-};
+export type { EnrolledStudent, EnrollmentBatch } from "./slices/enrollment-slice";
+import type { EnrolledStudent } from "./slices/enrollment-slice";
 
-export type EnrollmentBatch = {
-  id: string;
-  departmentId: string;
-  departmentLabel: string;
-  batchName: string;
-  programme: string;
-  semesterLabel: string;
-  students: EnrolledStudent[];
-  createdAt: string;
-};
-
-export const enrollmentStore = createLocalStore<EnrollmentBatch[]>("obe.student-enrollment.v1", []);
+const EMPTY: EnrollmentBatch[] = [];
 
 export function useEnrollmentBatches() {
-  return useLocalStore(enrollmentStore);
+  const hydrated = useHydrated();
+  useEffect(() => ensureHydrated(), []);
+  const items = useAppSelector((s) => s.enrollment.items);
+  return hydrated ? items : EMPTY;
 }
 
 export function newBatchId() {
@@ -31,29 +24,27 @@ export function newBatchId() {
 
 /** Batch names are unique (case-insensitive) across departments. */
 export function batchNameTaken(name: string, ignoreId?: string) {
+  ensureHydrated();
   const key = name.trim().toLowerCase();
-  return enrollmentStore
-    .get()
-    .some((b) => b.id !== ignoreId && b.batchName.trim().toLowerCase() === key);
+  return store
+    .getState()
+    .enrollment.items.some((b) => b.id !== ignoreId && b.batchName.trim().toLowerCase() === key);
 }
 
 export function saveBatch(batch: EnrollmentBatch) {
-  enrollmentStore.set((prev) => {
-    const index = prev.findIndex((b) => b.id === batch.id);
-    if (index === -1) return [batch, ...prev];
-    const copy = [...prev];
-    copy[index] = batch;
-    return copy;
-  });
+  ensureHydrated();
+  store.dispatch(upsertBatch(batch));
 }
 
 export function deleteBatch(id: string) {
-  enrollmentStore.set((prev) => prev.filter((b) => b.id !== id));
+  ensureHydrated();
+  store.dispatch(removeBatch(id));
 }
 
 export function getBatch(id: string | undefined) {
   if (!id) return undefined;
-  return enrollmentStore.get().find((b) => b.id === id);
+  ensureHydrated();
+  return store.getState().enrollment.items.find((b) => b.id === id);
 }
 
 export const STUDENT_TEMPLATE_HEADERS = ["Student ID", "Student Name"] as const;
