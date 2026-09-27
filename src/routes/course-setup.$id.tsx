@@ -4,25 +4,25 @@ import { ArrowLeft, Lock, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { AppShell } from "@/components/obe/app-shell";
-import { RequireAuth } from "@/components/obe/require-auth";
+import { AppShell } from "@/layouts/app-shell";
+import { RequireAuth } from "@/features/auth/components/require-auth";
 import {
   BasicInfoForm,
   basicInfoPayload,
   emptyBasicInfo,
   validateBasicInfo,
   type BasicInfoValue,
-} from "@/components/obe/course-setup/basic-info-form";
-import { ApprovalTab } from "@/components/obe/course-setup/approval-tab";
-import { CourseOutcomesTab } from "@/components/obe/course-setup/course-outcomes-tab";
-import { ReferencesTab } from "@/components/obe/course-setup/references-tab";
-import { WeeklyScheduleTab } from "@/components/obe/course-setup/weekly-schedule-tab";
+} from "@/features/course-setup/components/basic-info-form";
+import { ApprovalTab } from "@/features/course-setup/components/approval-tab";
+import { CourseOutcomesTab } from "@/features/course-setup/components/course-outcomes-tab";
+import { ReferencesTab } from "@/features/course-setup/components/references-tab";
+import { WeeklyScheduleTab } from "@/features/course-setup/components/weekly-schedule-tab";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/mock-auth";
+import { useAuth } from "@/context/auth-context";
 import {
   STATUS_LABEL,
   canEditOffering,
@@ -31,7 +31,7 @@ import {
   useCurrentUserId,
   useReferenceData,
   type CourseOffering,
-} from "@/lib/course-setup";
+} from "@/features/course-setup/services/course-setup";
 
 export const Route = createFileRoute("/course-setup/$id")({
   head: () => ({

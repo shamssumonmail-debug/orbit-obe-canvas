@@ -8,3 +8,9 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Project structure
+- `src/routes/` holds every page/URL (TanStack file routes; acts as `pages/`). Keep route files thin; compose from features. Why: framework requires file routes here.
+- `src/store/` holds Redux Toolkit state (slices + helpers) for frontend-only data, persisted to localStorage. Why: user requested Redux for app state.
+- `src/features/<domain>/{components,services}` + `index.ts` holds domain code. Why: domain-driven layout requested by user.
+- `src/context/` app-wide React contexts (auth); `src/layouts/` app shell + nav; `src/components/ui/` shadcn primitives; `src/utils/` pure helpers (`cn` in `@/utils/cn`); `src/services/` shared backend client re-exports; `src/assets/` media. Why: mirrors requested folder structure.

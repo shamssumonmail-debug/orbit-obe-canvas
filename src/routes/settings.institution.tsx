@@ -3,8 +3,8 @@ import { ImageUp, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { AppShell } from "@/components/obe/app-shell";
-import { RequireAuth } from "@/components/obe/require-auth";
+import { AppShell } from "@/layouts/app-shell";
+import { RequireAuth } from "@/features/auth/components/require-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -20,7 +20,7 @@ import {
   useLogoUrl,
   useSaveInstitution,
   type InstitutionProfileRow,
-} from "@/lib/institution";
+} from "@/features/institution/services/institution";
 
 export const Route = createFileRoute("/settings/institution")({
   head: () => ({

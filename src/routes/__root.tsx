@@ -10,9 +10,11 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
-import { AuthProvider } from "@/lib/mock-auth";
+import { reportLovableError } from "@/utils/lovable-error-reporting";
+import { AuthProvider } from "@/context/auth-context";
 import { Toaster } from "@/components/ui/sonner";
+import { Provider as ReduxProvider } from "react-redux";
+import { store } from "@/store";
 
 function NotFoundComponent() {
   return (
@@ -131,6 +133,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
+    <ReduxProvider store={store}>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
@@ -138,5 +141,6 @@ function RootComponent() {
         <Toaster position="top-right" richColors />
       </AuthProvider>
     </QueryClientProvider>
+    </ReduxProvider>
   );
 }

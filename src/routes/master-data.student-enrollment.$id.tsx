@@ -5,8 +5,8 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 
-import { AppShell } from "@/components/obe/app-shell";
-import { RequireAuth } from "@/components/obe/require-auth";
+import { AppShell } from "@/layouts/app-shell";
+import { RequireAuth } from "@/features/auth/components/require-auth";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,15 +35,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
-import { batchOptions } from "@/lib/co-assessment";
+import { batchOptions } from "@/features/co-assessment/services/co-assessment";
 import {
   batchNameTaken,
   getBatch,
   newBatchId,
   saveBatch,
   type EnrolledStudent,
-} from "@/lib/enrollment-store";
-import { useSemesterTypeOptions } from "@/lib/semester-types";
+} from "@/store/enrollment-store";
+import { useSemesterTypeOptions } from "@/features/master-data/services/semester-types";
 
 export const Route = createFileRoute("/master-data/student-enrollment/$id")({
   validateSearch: (search: Record<string, unknown>) => ({
