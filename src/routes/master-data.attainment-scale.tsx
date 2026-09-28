@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/views/auth/require-auth";
-import { MasterDataTable } from "@/views/master-data/master-data-table";
-import { attainmentScaleResource } from "@/models/master-data";
+import { AttainmentScaleRoute } from "@/views/pages/master-data-attainment-scale-page";
 
 export const Route = createFileRoute("/master-data/attainment-scale")({
   head: () => ({
@@ -19,13 +16,3 @@ export const Route = createFileRoute("/master-data/attainment-scale")({
   }),
   component: AttainmentScaleRoute,
 });
-
-function AttainmentScaleRoute() {
-  return (
-    <RequireAuth>
-      <AppShell title="Attainment Scale" subtitle="Master data · global fallback scale bands">
-        <MasterDataTable resource={attainmentScaleResource} />
-      </AppShell>
-    </RequireAuth>
-  );
-}

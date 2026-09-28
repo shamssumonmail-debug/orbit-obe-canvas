@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/views/auth/require-auth";
-import { MasterDataTable } from "@/views/master-data/master-data-table";
-import { complexProblemAttributesResource } from "@/models/master-data";
+import { ComplexProblemAttributesRoute } from "@/views/pages/master-data-complex-problem-attributes-page";
 
 export const Route = createFileRoute("/master-data/complex-problem-attributes")({
   head: () => ({
@@ -20,16 +17,3 @@ export const Route = createFileRoute("/master-data/complex-problem-attributes")(
   }),
   component: ComplexProblemAttributesRoute,
 });
-
-function ComplexProblemAttributesRoute() {
-  return (
-    <RequireAuth>
-      <AppShell
-        title="Complex Problem / Activity Attributes"
-        subtitle="Master data · CEP and CEA attribute definitions"
-      >
-        <MasterDataTable resource={complexProblemAttributesResource} />
-      </AppShell>
-    </RequireAuth>
-  );
-}
