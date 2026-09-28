@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
-import { round1, sectionGroups, type ScoreSection, type StudentRow } from "@/features/co-assessment/services/co-assessment";
+import { round1, sectionGroups, type ScoreSection, type StudentRow } from "@/models/co-assessment";
 
 export type AttainmentBand = {
   scale_value: number;

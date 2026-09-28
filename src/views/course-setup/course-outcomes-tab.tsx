@@ -33,7 +33,7 @@ import {
   useReferenceData,
   type AssessmentTool,
   type CourseOutcome,
-} from "@/features/course-setup/services/course-setup";
+} from "@/controllers/course-setup";
 
 type DraftTool = {
   key: string;

@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/utils/cn";
-import { WEEKDAYS, profileLabel, useReferenceData } from "@/features/course-setup/services/course-setup";
+import { WEEKDAYS, profileLabel, useReferenceData } from "@/controllers/course-setup";
 
 export type ConsultationSlotDraft = {
   key: string;

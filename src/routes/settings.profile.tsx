@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/features/auth/components/require-auth";
+import { RequireAuth } from "@/views/auth/require-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useMyProfile, useSaveMyProfile } from "@/features/profile/services/profile";
+import { useMyProfile, useSaveMyProfile } from "@/controllers/profile";
 
 export const Route = createFileRoute("/settings/profile")({
   head: () => ({

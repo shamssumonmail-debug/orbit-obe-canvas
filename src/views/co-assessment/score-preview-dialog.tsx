@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useInstitution, useLogoUrl } from "@/features/institution/services/institution";
+import { useInstitution, useLogoUrl } from "@/controllers/institution";
 import {
   grandMaxScore,
   grandTotal,
@@ -19,7 +19,7 @@ import {
   sectionTotal,
   type ScoreSection,
   type StudentRow,
-} from "@/features/co-assessment/services/co-assessment";
+} from "@/models/co-assessment";
 
 type Meta = {
   batchLabel: string;

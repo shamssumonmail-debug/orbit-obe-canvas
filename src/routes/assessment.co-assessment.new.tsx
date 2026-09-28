@@ -4,12 +4,12 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/features/auth/components/require-auth";
-import { CoAttainmentReport } from "@/features/co-assessment/components/co-attainment-chart";
-import { ScoreEntryTable } from "@/features/co-assessment/components/score-entry-table";
-import { ScoreImport } from "@/features/co-assessment/components/score-import";
-import { ScorePreviewDialog } from "@/features/co-assessment/components/score-preview-dialog";
-import { StructureStep } from "@/features/co-assessment/components/structure-step";
+import { RequireAuth } from "@/views/auth/require-auth";
+import { CoAttainmentReport } from "@/views/co-assessment/co-attainment-chart";
+import { ScoreEntryTable } from "@/views/co-assessment/score-entry-table";
+import { ScoreImport } from "@/views/co-assessment/score-import";
+import { ScorePreviewDialog } from "@/views/co-assessment/score-preview-dialog";
+import { StructureStep } from "@/views/co-assessment/structure-step";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,14 +41,14 @@ import {
   structureValid,
   type ScoreSection,
   type StudentRow,
-} from "@/features/co-assessment/services/co-assessment";
+} from "@/models/co-assessment";
 import {
   getAssessment,
   newAssessmentId,
   saveAssessment,
   type AssessmentRecord,
 } from "@/store/co-assessment-store";
-import { useSemesterTypeOptions } from "@/features/master-data/services/semester-types";
+import { useSemesterTypeOptions } from "@/controllers/semester-types";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/assessment/co-assessment/new")({

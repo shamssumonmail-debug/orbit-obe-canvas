@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import type { WeeklyScheduleRow } from "@/features/course-setup/services/course-setup";
+import type { WeeklyScheduleRow } from "@/controllers/course-setup";
 import { useCourseOutcomes } from "./course-outcomes-tab";
 
 type DraftWeek = {

@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import { useCourseReferences, type CourseReference } from "@/features/course-setup/services/course-setup";
+import { useCourseReferences, type CourseReference } from "@/controllers/course-setup";
 
 type DraftRef = { key: string; citation: string };
 

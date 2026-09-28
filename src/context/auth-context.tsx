@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
-import { ensureDemoAccount } from "@/features/auth/services/demo-auth.functions";
+import { ensureDemoAccount } from "@/controllers/demo-auth.functions";
 
 export type Role = "super_admin" | "faculty";
 

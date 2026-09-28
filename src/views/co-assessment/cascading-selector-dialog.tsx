@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { mockCOs, type MockCO, type MockGroup, type MockQuestion } from "@/features/co-assessment/services/co-assessment";
+import { mockCOs, type MockCO, type MockGroup, type MockQuestion } from "@/models/co-assessment";
 
 export type PickedGroup = {
   label: string;

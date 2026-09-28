@@ -9,7 +9,7 @@ import {
   sectionTotal,
   type ScoreSection,
   type StudentRow,
-} from "@/features/co-assessment/services/co-assessment";
+} from "@/models/co-assessment";
 import { cn } from "@/utils/cn";
 
 type Props = {

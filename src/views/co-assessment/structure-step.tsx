@@ -24,7 +24,7 @@ import {
   type ExamKind,
   type ScoreGroup,
   type ScoreSection,
-} from "@/features/co-assessment/services/co-assessment";
+} from "@/models/co-assessment";
 import { cn } from "@/utils/cn";
 
 type Props = {

@@ -2,13 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Printer } from "lucide-react";
 
-import { RequireAuth } from "@/features/auth/components/require-auth";
+import { RequireAuth } from "@/views/auth/require-auth";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
-import { useLogoUrl, useInstitution } from "@/features/institution/services/institution";
-import { useCoDetails, useCourseOutcomes } from "@/features/course-setup/components/course-outcomes-tab";
-import { useWeeklySchedule } from "@/features/course-setup/components/weekly-schedule-tab";
+import { useLogoUrl, useInstitution } from "@/controllers/institution";
+import { useCoDetails, useCourseOutcomes } from "@/views/course-setup/course-outcomes-tab";
+import { useWeeklySchedule } from "@/views/course-setup/weekly-schedule-tab";
 import {
   formatSlot,
   profileLabel,
@@ -16,7 +16,7 @@ import {
   useCourseReferences,
   useReferenceData,
   type CourseOffering,
-} from "@/features/course-setup/services/course-setup";
+} from "@/controllers/course-setup";
 
 export const Route = createFileRoute("/course-setup/report/$id")({
   head: () => ({

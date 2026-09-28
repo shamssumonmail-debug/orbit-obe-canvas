@@ -6,7 +6,7 @@ import {
   type AssessmentStatus,
   type ScoreSection,
   type StudentRow,
-} from "@/features/co-assessment/services/co-assessment";
+} from "@/models/co-assessment";
 
 export const ASSESSMENTS_KEY = "obe.co-assessments.v1";
 
