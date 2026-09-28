@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/views/auth/require-auth";
-import { MasterDataTable } from "@/views/master-data/master-data-table";
-import { knowledgeProfilesResource } from "@/models/master-data";
+import { KnowledgeProfilesRoute } from "@/views/pages/master-data-knowledge-profiles-page";
 
 export const Route = createFileRoute("/master-data/knowledge-profiles")({
   head: () => ({
@@ -19,13 +16,3 @@ export const Route = createFileRoute("/master-data/knowledge-profiles")({
   }),
   component: KnowledgeProfilesRoute,
 });
-
-function KnowledgeProfilesRoute() {
-  return (
-    <RequireAuth>
-      <AppShell title="Knowledge Profiles" subtitle="Master data · knowledge profile descriptors (K1–K8)">
-        <MasterDataTable resource={knowledgeProfilesResource} />
-      </AppShell>
-    </RequireAuth>
-  );
-}

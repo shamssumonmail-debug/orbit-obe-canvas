@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/views/auth/require-auth";
-import { MasterDataTable } from "@/views/master-data/master-data-table";
-import { bloomTaxonomyResource } from "@/models/master-data";
+import { BloomTaxonomyRoute } from "@/views/pages/master-data-bloom-taxonomy-levels-page";
 
 export const Route = createFileRoute("/master-data/bloom-taxonomy-levels")({
   head: () => ({
@@ -20,13 +17,3 @@ export const Route = createFileRoute("/master-data/bloom-taxonomy-levels")({
   }),
   component: BloomTaxonomyRoute,
 });
-
-function BloomTaxonomyRoute() {
-  return (
-    <RequireAuth>
-      <AppShell title="Bloom's Taxonomy Levels" subtitle="Master data · cognitive, psychomotor and affective levels">
-        <MasterDataTable resource={bloomTaxonomyResource} />
-      </AppShell>
-    </RequireAuth>
-  );
-}

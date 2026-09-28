@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/views/auth/require-auth";
-import { MasterDataTable } from "@/views/master-data/master-data-table";
-import { semesterTypesResource } from "@/models/master-data";
+import { SemesterTypesRoute } from "@/views/pages/master-data-semester-types-page";
 
 export const Route = createFileRoute("/master-data/semester-types")({
   head: () => ({
@@ -19,13 +16,3 @@ export const Route = createFileRoute("/master-data/semester-types")({
   }),
   component: SemesterTypesRoute,
 });
-
-function SemesterTypesRoute() {
-  return (
-    <RequireAuth>
-      <AppShell title="Semester Types" subtitle="Master data · semester labels for scheduling">
-        <MasterDataTable resource={semesterTypesResource} />
-      </AppShell>
-    </RequireAuth>
-  );
-}
