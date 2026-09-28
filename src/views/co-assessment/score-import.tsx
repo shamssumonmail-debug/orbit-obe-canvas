@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { sectionGroups, type ScoreSection, type StudentRow } from "@/features/co-assessment/services/co-assessment";
+import { sectionGroups, type ScoreSection, type StudentRow } from "@/models/co-assessment";
 
 export type ScoreColumn = { id: string; header: string; maxScore: number };
 

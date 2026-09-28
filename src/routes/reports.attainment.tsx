@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Bar, BarChart, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/features/auth/components/require-auth";
-import { CoAttainmentReport } from "@/features/co-assessment/components/co-attainment-chart";
+import { RequireAuth } from "@/views/auth/require-auth";
+import { CoAttainmentReport } from "@/views/co-assessment/co-attainment-chart";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -21,7 +21,7 @@ import {
   computeCoAttainment,
   computePoAttainment,
   useAttainmentBands,
-} from "@/features/reports/services/co-attainment";
+} from "@/controllers/co-attainment";
 import { useAssessments } from "@/store/co-assessment-store";
 
 export const Route = createFileRoute("/reports/attainment")({

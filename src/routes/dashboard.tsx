@@ -21,7 +21,7 @@ import {
 import { toast } from "sonner";
 
 import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/features/auth/components/require-auth";
+import { RequireAuth } from "@/views/auth/require-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/context/auth-context";
@@ -33,7 +33,7 @@ import {
   obeCounters,
   pendingMapping,
   setupRings,
-} from "@/features/dashboard/services/obe-mock-data";
+} from "@/models/obe-mock-data";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({

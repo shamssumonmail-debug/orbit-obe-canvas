@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/features/auth/components/require-auth";
+import { RequireAuth } from "@/views/auth/require-auth";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,7 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { type AssessmentStatus } from "@/features/co-assessment/services/co-assessment";
+import { type AssessmentStatus } from "@/models/co-assessment";
 import { deleteAssessment, useAssessments } from "@/store/co-assessment-store";
 
 export const Route = createFileRoute("/assessment/co-assessment/")({

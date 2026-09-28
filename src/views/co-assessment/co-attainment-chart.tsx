@@ -15,8 +15,8 @@ import {
   computeCoAttainment,
   useAttainmentBands,
   type CoAttainment,
-} from "@/features/reports/services/co-attainment";
-import type { ScoreSection, StudentRow } from "@/features/co-assessment/services/co-assessment";
+} from "@/controllers/co-attainment";
+import type { ScoreSection, StudentRow } from "@/models/co-assessment";
 
 type Props = {
   sections: ScoreSection[];

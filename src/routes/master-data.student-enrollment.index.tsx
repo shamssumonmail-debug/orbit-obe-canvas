@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/features/auth/components/require-auth";
+import { RequireAuth } from "@/views/auth/require-auth";
 import {
   AlertDialog,
   AlertDialogAction,

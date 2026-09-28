@@ -26,7 +26,7 @@ import {
   useCurrentUserId,
   useReferenceData,
   type CourseOffering,
-} from "@/features/course-setup/services/course-setup";
+} from "@/controllers/course-setup";
 import { useCoDetails, useCourseOutcomes } from "./course-outcomes-tab";
 import { useWeeklySchedule } from "./weekly-schedule-tab";
 

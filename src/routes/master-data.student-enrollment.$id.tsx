@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import * as XLSX from "xlsx";
 
 import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/features/auth/components/require-auth";
+import { RequireAuth } from "@/views/auth/require-auth";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,7 +35,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
-import { batchOptions } from "@/features/co-assessment/services/co-assessment";
+import { batchOptions } from "@/models/co-assessment";
 import {
   batchNameTaken,
   getBatch,
@@ -43,7 +43,7 @@ import {
   saveBatch,
   type EnrolledStudent,
 } from "@/store/enrollment-store";
-import { useSemesterTypeOptions } from "@/features/master-data/services/semester-types";
+import { useSemesterTypeOptions } from "@/controllers/semester-types";
 
 export const Route = createFileRoute("/master-data/student-enrollment/$id")({
   validateSearch: (search: Record<string, unknown>) => ({

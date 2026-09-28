@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/context/auth-context";
-import { useInstitution, useLogoUrl } from "@/features/institution/services/institution";
+import { useInstitution, useLogoUrl } from "@/controllers/institution";
 
 export const Route = createFileRoute("/")({
   head: () => ({

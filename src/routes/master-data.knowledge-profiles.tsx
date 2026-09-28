@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/features/auth/components/require-auth";
-import { MasterDataTable } from "@/features/master-data/components/master-data-table";
-import { knowledgeProfilesResource } from "@/features/master-data/services/master-data";
+import { RequireAuth } from "@/views/auth/require-auth";
+import { MasterDataTable } from "@/views/master-data/master-data-table";
+import { knowledgeProfilesResource } from "@/models/master-data";
 
 export const Route = createFileRoute("/master-data/knowledge-profiles")({
   head: () => ({

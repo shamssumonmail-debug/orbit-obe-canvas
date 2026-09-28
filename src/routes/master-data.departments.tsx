@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
 import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/features/auth/components/require-auth";
-import { MasterDataTable } from "@/features/master-data/components/master-data-table";
+import { RequireAuth } from "@/views/auth/require-auth";
+import { MasterDataTable } from "@/views/master-data/master-data-table";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
-import { curriculumCoursesResource, departmentsResource } from "@/features/master-data/services/master-data";
+import { curriculumCoursesResource, departmentsResource } from "@/models/master-data";
 
 export const Route = createFileRoute("/master-data/departments")({
   head: () => ({

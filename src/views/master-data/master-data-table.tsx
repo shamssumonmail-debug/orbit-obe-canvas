@@ -43,7 +43,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/auth-context";
-import { PAGE_SIZE, canManageMasterData, type FieldDef, type ResourceDef } from "@/features/master-data/services/master-data";
+import { PAGE_SIZE, canManageMasterData, type FieldDef, type ResourceDef } from "@/models/master-data";
 
 type Row = Record<string, unknown>;
 

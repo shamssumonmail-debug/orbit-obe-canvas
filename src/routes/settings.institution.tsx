@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/features/auth/components/require-auth";
+import { RequireAuth } from "@/views/auth/require-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -20,7 +20,7 @@ import {
   useLogoUrl,
   useSaveInstitution,
   type InstitutionProfileRow,
-} from "@/features/institution/services/institution";
+} from "@/controllers/institution";
 
 export const Route = createFileRoute("/settings/institution")({
   head: () => ({

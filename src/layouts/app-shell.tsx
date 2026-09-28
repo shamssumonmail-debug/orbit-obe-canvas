@@ -18,8 +18,8 @@ import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/utils/cn";
 import { useAuth } from "@/context/auth-context";
 import { sectionsForRole } from "@/layouts/obe-nav";
-import { useInstitution, useLogoUrl } from "@/features/institution/services/institution";
-import { useMyProfile } from "@/features/profile/services/profile";
+import { useInstitution, useLogoUrl } from "@/controllers/institution";
+import { useMyProfile } from "@/controllers/profile";
 
 function Brand({ compact = false }: { compact?: boolean }) {
   const { data: institution } = useInstitution();

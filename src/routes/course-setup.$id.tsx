@@ -5,18 +5,18 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/layouts/app-shell";
-import { RequireAuth } from "@/features/auth/components/require-auth";
+import { RequireAuth } from "@/views/auth/require-auth";
 import {
   BasicInfoForm,
   basicInfoPayload,
   emptyBasicInfo,
   validateBasicInfo,
   type BasicInfoValue,
-} from "@/features/course-setup/components/basic-info-form";
-import { ApprovalTab } from "@/features/course-setup/components/approval-tab";
-import { CourseOutcomesTab } from "@/features/course-setup/components/course-outcomes-tab";
-import { ReferencesTab } from "@/features/course-setup/components/references-tab";
-import { WeeklyScheduleTab } from "@/features/course-setup/components/weekly-schedule-tab";
+} from "@/views/course-setup/basic-info-form";
+import { ApprovalTab } from "@/views/course-setup/approval-tab";
+import { CourseOutcomesTab } from "@/views/course-setup/course-outcomes-tab";
+import { ReferencesTab } from "@/views/course-setup/references-tab";
+import { WeeklyScheduleTab } from "@/views/course-setup/weekly-schedule-tab";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -31,7 +31,7 @@ import {
   useCurrentUserId,
   useReferenceData,
   type CourseOffering,
-} from "@/features/course-setup/services/course-setup";
+} from "@/controllers/course-setup";
 
 export const Route = createFileRoute("/course-setup/$id")({
   head: () => ({
