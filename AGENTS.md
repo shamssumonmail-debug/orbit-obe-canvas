@@ -10,7 +10,7 @@
 <!-- LOVABLE:END -->
 
 ## Project structure
-- `src/routes/` holds every page/URL (TanStack file routes; acts as `pages/`). Keep route files thin; compose from views/controllers. Why: framework requires file routes here.
+- `src/routes/` files only define the URL, head() metadata and search validation; each page screen lives in `src/views/pages/<name>-page.tsx`. Why: user asked to separate views from routes.
 - `src/store/` holds Redux Toolkit state (slices + helpers) for frontend-only data, persisted to localStorage. Why: user requested Redux for app state.
 - MVC: `src/models/` pure types, mock data, calculations; `src/views/<domain>/` UI components; `src/controllers/` data hooks + server functions. Why: user requested top-level MVC folders.
 - `src/context/` app-wide React contexts (auth); `src/layouts/` app shell + nav; `src/components/ui/` shadcn primitives; `src/utils/` pure helpers (`cn` in `@/utils/cn`); `src/services/` shared backend client re-exports; `src/assets/` media. Why: mirrors requested folder structure.
